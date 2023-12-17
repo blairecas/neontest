@@ -16,16 +16,14 @@ Start:	mov	#1000, SP			; just in case
 	; vram init
 	; 1st video buffer
 	mov	#Vram0, R0
-	mov	#^B1010101001010101, R1
-	mov	#40000/2, R3
-10$:	mov	R1, (R0)+
-	sob	R3, 10$
+	mov	#^B1001100101100110, R4
+	mov	#^B0110011010011001, R5
+	call	VramInit
 	; 2nd video buffer
 	mov	#Vram1, R0
-	mov	#^B1111111111111111, R1
-	mov	#40000/2, R3
-20$:	mov	R1, (R0)+
-	sob	R3, 20$
+	mov	#^B0100010001010101, R4
+	mov	#^B0101010101000100, R5
+	call	VramInit
 
 	call	SetAreaTas
 	call	AreaInit
@@ -48,6 +46,23 @@ Start:	mov	#1000, SP			; just in case
 	call	AreaFree
 	call	VSyncFree
 	.exit
+
+
+; //////////////////////////////////////////////
+; // Vram
+; //////////////////////////////////////////////
+
+VramInit:
+	mov	#128., R3
+10$:	mov	#32., R2			; 64 bytes line
+20$:	mov	R4, (R0)+
+	sob	R2, 20$
+	mov	#32., R2			; 64 bytes line
+30$:	mov	R5, (R0)+
+	sob	R2, 30$
+	sob	R3, 10$
+	return
+
 
 ; //////////////////////////////////////////////
 ; // Vsync
@@ -84,17 +99,8 @@ VsyncProc:
 SetAreaTas4k:
 	bic	#^B1100000000001111, R0		; just in case
 	mov	#^B0011111111110000, R2		; memory register mask for TAS
-	mov	#16., R3			; 64. lines are using 4k of memory
+	mov	#64., R3			; 64. lines are using 4k of memory
 10$:	bic	R2, (R1)
-	bis	R0, (R1)+
-	tst	(R1)+
-	bic	R2, (R1)
-	bis	R0, (R1)+
-	tst	(R1)+
-	bic	R2, (R1)
-	bis	R0, (R1)+
-	tst	(R1)+
-	bic	R2, (R1)
 	bis	R0, (R1)+
 	tst	(R1)+
 	sob	R3, 10$
