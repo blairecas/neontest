@@ -1,0 +1,1 @@
+start ..\..\neon\neonbtl /autostart /disk0:C:\Projects\uknc\00_code\neontest\neon.dsk /boot1
