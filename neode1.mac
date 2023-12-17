@@ -50,8 +50,6 @@ Start:	mov	#1000, SP			; just in case
 90$:	; EXIT EXIT
 	call	WindowFree
 	.exit
-	return
-
 
 PaletteRotation:
 	mov	#16., 101$+2			; total palette cycles (always 16.)
