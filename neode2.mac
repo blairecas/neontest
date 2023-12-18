@@ -12,24 +12,26 @@
 Start:	mov	#1000, SP			; just in case 
 	call	GetAllMem			; get all memory (to USR)
 	clr	@#177560			; clear keyboard status? 
+	call	VSyncInit			; set vsync process
 
-	call	VSyncInit
+	; vram clear
+	mov	#Vram0, R0
+	mov	#40000, R3
+	clr	(R0)+
+	sob	R3, .-2
 
-	; vram init
-	; 1st video buffer
-	mov	#Vram0+64., R0			; skip 1st line - it's a border anyway
-	mov	#^B1100110011001100, R4
-	mov	#^B0011001100110011, R5
-	call	VramInit
-	; 2nd video buffer
-	mov	#Vram1+64., R0			; skip 1st line
-	mov	#^B0100010001000100, R4
-	mov	#^B0001000100010001, R5
-	call	VramInit
+	call	PaletteVm1Init
 
-	call	SetAreaTas
+	call	InitBalls
+
+;	call	DrawBorders
+;	com	CurrentBuffer
+;	call	DrawBorders
+;	com	CurrentBuffer
+	
+;	call	SetAreaTas
 	call	AreaInit
-	mov	AreaConfig+2, AreaConfig2+2	; must be same area# for both vline tables
+;	mov	AreaConfig+2, AreaConfig2+2	; must be same area# for both vline tables
 	call	ViewInit
 
 90$:	; wait for VSYNC
@@ -37,9 +39,24 @@ Start:	mov	#1000, SP			; just in case
 	beq	90$
 	clr	VsyCount
 
-	; switch memory buffer
-	com	CurrentBuffer
-	call	AreaInit
+	; switch memory buffer flag
+	;com	CurrentBuffer
+
+	mov	#FrameBufObj, FrameBufAddr
+	; clear previous balls (in Vram1)
+	call	ClearBalls
+	; move balls
+	call	MoveBalls
+	; draw new balls (in Vram1)
+	call	DrawBalls
+	; move sprites from Vram1 to Vram0
+	call	MoveFramebuffer
+
+	; switch area
+	; call	AreaInit
+
+	; switch viewport
+	;call	ViewInit
 
 	; test for keypress
 	tst	@#177560
@@ -48,6 +65,7 @@ Start:	mov	#1000, SP			; just in case
 
 	call	AreaFree
 	call	VSyncFree
+	call	PaletteVm1Restore
 	.exit
 
 
@@ -68,7 +86,7 @@ VramInit:
 
 
 ; //////////////////////////////////////////////
-; // Vsync
+; // Vsync (fake)
 ; //////////////////////////////////////////////
 BkwScrn:	.word	0
 Bkw100:		.word	0
@@ -115,6 +133,417 @@ GetAllMem:
 	.print	#MsgNoMemory
 	.exit
 20$:	return
+
+; random with linear-feedback shift register (Galois)
+; random -> R0
+Random:	clc
+	ror	(PC)+
+Lfsr00:	.word	126341 		; 0ACE1
+	bcc	Lfsr03
+	mov	(PC)+, R0
+Lfsr01:	.word	132000		; 0B400
+	xor	R0, Lfsr00
+Lfsr03:	mov	Lfsr00, R0
+	return
+
+
+; ///////////////////////////////////////////////////
+; // Sprites
+; ///////////////////////////////////////////////////
+
+; draw 16x16 sprite (bis)
+; R1 - X, R2 - Y, R0 - spr adr (4colors as in BK-0010)
+DrawSprite:
+	ash	#6., R2				; Y*64.
+	mov	R1, R3				; X/8 * 2 (8 pixels in word)
+	ash	#-3., R3
+	asl	R3
+	add	R3, R2				; R2 - vram offset
+	add	#Vram1, R2			; Buffer 1
+	mov	R2, @FrameBufAddr
+	add	#2, FrameBufAddr
+	bic	#^B1111111111111000, R1	
+	asl	R1				; R1 - X%8 * 2 - ashc counter
+	mov	#16., R3			; 16. lines 
+20$:	; 1st word
+	clr	R4
+	mov	(R0)+, R5
+	ashc	R1, R4				; R4:R5 << R1
+	bis	R5, (R2)+
+	bis	R4, (R2)
+	; 2nd word
+	clr	R4
+	mov	(R0)+, R5
+	ashc	R1, R4
+	bis	R5, (R2)+
+	bis	R4, (R2)
+	; advance vaddr and cycle it
+	add	#60., R2
+	sob	R3, 20$
+	return
+
+BallSprite:
+	.word	0, 0, 0, 0, 0, 0, 170000, 17
+	.word	127400, 372, 125400, 352, 125300, 1652, 124300, 1652
+	.word	121300, 1652, 124300, 1652, 121400, 352, 107400, 370
+	.word	170000, 17, 0, 0, 0, 0, 0, 0  
+
+BorderSprite:
+	.word	125252, 125252, 146316, 106314, 31462, 131463, 146316, 106314
+	.word	31462, 131463, 146316, 106314, 31462, 131463, 146316, 106314
+	.word	31462, 131463, 146316, 106314, 31462, 131463, 146316, 106314
+	.word	31462, 131463, 146316, 106314, 31462, 131463, 125252, 125252 
+
+; clear sprite (16x16) in buffer
+; R1 - X, R2 - Y
+ClearSprite:
+	ash	#6., R2				; Y*64.
+	mov	R1, R3				; X/8 * 2 (8 pixels in word)
+	ash	#-3., R3
+	asl	R3
+	add	R3, R2				; R2 - vram offset
+	add	#Vram1, R2			; Buffer 1
+	mov	R2, @FrameBufAddr
+	add	#2, FrameBufAddr
+	bic	#^B1111111111111000, R1		; fraction of X
+	mov	#16., R3
+20$:	; clear 3 words
+	clr	(R2)+
+	clr	(R2)+
+	tst	R1
+	beq	30$
+	clr	(R2)
+30$:	add	#60., R2
+	sob	R3, 20$
+	return
+
+; move Vram1 to Vram0 by portions of cleared and draw..ed .. ah what a heck
+MoveFramebuffer:
+	mov	#FrameBufObj, R0
+	mov	#BallCount*2, R1
+	mov	#60., R2			; vaddr addition
+10$:	mov	(R0)+, R4
+	mov	R4, R5
+	sub	#40000, R5
+	mov	#16., R3
+20$:	mov	(R4)+, (R5)+
+	mov	(R4)+, (R5)+
+	mov	(R4), (R5)
+	add	R2, R4
+	add	R2, R5
+	sob	R3, 20$
+	sob	R1, 10$
+	return
+
+DrawBorders:
+	clr	varCount
+	mov	#16., 101$+2
+10$:	mov	varCount, R1
+	clr	R2
+	mov	#BorderSprite, R0
+	call	DrawSprite
+	mov	varCount, R1
+	mov	#256.-16., R2
+	mov	#BorderSprite, R0
+	call	DrawSprite
+	clr	R1
+	mov	varCount, R2
+	mov	#BorderSprite, R0
+	call	DrawSprite
+	mov	#256.-16., R1
+	mov	varCount, R2
+	mov	#BorderSprite, R0
+	call	DrawSprite
+	add	#16., varCount
+101$:	dec	#000000
+	bne	10$
+	return
+
+BallCount = 8.
+BallObjects:
+	.rept	BallCount
+	.word	0				; X (fixed point, h-byte int part, l-byte fraction)
+	.word	0				; Y
+	.word	0				; angle
+	.word	0				; velocity
+	.endr
+
+FrameBufAddr:	.word	0
+FrameBufObj:
+	; cleared ones
+	.rept	BallCount
+	.word	0				; starting vaddr offset
+	.endr
+	; drawed drawn dr.. wtf I forgot my english 
+	.rept	BallCount
+	.word	0
+	.endr
+
+DrawBalls:
+	mov	#BallObjects, varAddr
+	mov	#BallCount, 101$+2
+10$:	mov	@varAddr, R1
+	clrb	R1
+	swab	R1
+	add	#2., varAddr
+	mov	@varAddr, R2
+	clrb	R2
+	swab	R2
+	add	#6., varAddr
+	mov	#BallSprite, R0
+	call	DrawSprite
+101$:	dec	#000000
+	bne	10$
+	return
+
+ClearBalls:
+	mov	#BallObjects, varAddr
+	mov	#BallCount, 101$+2
+10$:	mov	@varAddr, R1
+	clrb	R1
+	swab	R1
+	add	#2., varAddr
+	mov	@varAddr, R2
+	clrb	R2
+	swab	R2
+	add	#6., varAddr
+	mov	#BallSprite, R0
+	call	ClearSprite
+101$:	dec	#000000
+	bne	10$
+	return
+
+InitBalls:
+	mov	#BallObjects, varAddr
+	mov	#BallCount, 101$+2
+10$:	call	Random				; get X
+	clrb	R0
+	call	CorrectBallBoundary
+	mov	R0, @varAddr
+	add	#2, varAddr
+	call	Random				; get Y
+	clrb	R0
+	call	CorrectBallBoundary
+	mov	R0, @varAddr
+	add	#2, varAddr
+	call	Random
+	bic	#^B1111111110000000, R0		; angle is 0..127
+	mov	R0, @varAddr
+	add	#2, varAddr
+	call	Random
+	bic	#^B1111111111111100, R0		; velocity 2..
+	inc	R0
+	inc	R0
+	mov	R0, @varAddr
+	add	#2, varAddr
+101$:	dec	#000000
+	bne	10$
+	return
+
+CorrectBallBoundary:
+	cmp	R0, #16.*256.
+	bhis	10$
+	mov	#16.*256., R0
+	return
+10$:	cmp	R0, #256.-16.-16.*256.
+	blos	20$
+	mov	#256.-16.-16.*256., R0
+20$:	return
+
+
+; ///////////////////////////////////////////////////////////////
+; // Movement
+; ///////////////////////////////////////////////////////////////
+
+; movements by angle 0..127 (in float), dx, dy
+TBALPH:	.WORD	64.,0., 63.,3., 63.,6., 63.,9., 62.,12., 62.,15., 61.,18., 60.,21., 59.,24.
+	.WORD	57.,27., 56.,30., 54.,32., 53.,35., 51.,38., 49.,40., 47.,42., 45.,45., 42.,47.
+	.WORD	40.,49., 38.,51., 35.,53., 32.,54., 30.,56., 27.,57., 24.,59., 21.,60., 18.,61.
+	.WORD	15.,62., 12.,62., 9.,63., 6.,63., 3.,63., 0.,64., -3.,63., -6.,63., -9.,63.
+	.WORD	-12.,62., -15.,62., -18.,61., -21.,60., -24.,59., -27.,57., -30.,56., -32.,54., -35.,53.
+	.WORD	-38.,51., -40.,49., -42.,47., -45.,45., -47.,42., -49.,40., -51.,38., -53.,35., -54.,32.
+	.WORD	-56.,30., -57.,27., -59.,24., -60.,21., -61.,18., -62.,15., -62.,12., -63.,9., -63.,6.
+	.WORD	-63.,3., -64.,0., -63.,-3., -63.,-6., -63.,-9., -62.,-12., -62.,-15., -61.,-18., -60.,-21.
+	.WORD	-59.,-24., -57.,-27., -56.,-30., -54.,-32., -53.,-35., -51.,-38., -49.,-40., -47.,-42., -45.,-45.
+	.WORD	-42.,-47., -40.,-49., -38.,-51., -35.,-53., -32.,-54., -30.,-56., -27.,-57., -24.,-59., -21.,-60.
+	.WORD	-18.,-61., -15.,-62., -12.,-62., -9.,-63., -6.,-63., -3.,-63., 0.,-64., 3.,-63., 6.,-63.
+	.WORD	9.,-63., 12.,-62., 15.,-62., 18.,-61., 21.,-60., 24.,-59., 27.,-57., 30.,-56., 32.,-54.
+	.WORD	35.,-53., 38.,-51., 40.,-49., 42.,-47., 45.,-45., 47.,-42., 49.,-40., 51.,-38., 53.,-35.
+	.WORD	54.,-32., 56.,-30., 57.,-27., 59.,-24., 60.,-21., 61.,-18., 62.,-15., 62.,-12., 63.,-9.
+	.WORD	63.,-6., 63.,-3. 
+
+; movement summary
+Movement:
+	call	TSTANG				; check angle
+	call	MOVT01				; move by angle
+	call	CLRNOR				;
+	call	MOVT02				; walls normals
+	call	ANGCOR				; correct them
+	call	CLRNOR				;
+;	call	MOVT03				; field bricks normals
+;	call	ANGCOR				; correct them
+	return
+ 
+MoveBalls:
+	mov	#BallObjects, varAddr
+	mov	#BallCount, 101$+2
+10$:	mov	varAddr, R0
+	mov	(R0)+, OBJECX
+	mov	(R0)+, OBJECY
+	mov	(R0)+, ANGLE0
+	mov	(R0)+, VELOCI
+	mov	R0, -(SP)
+	call	Movement
+	mov	(SP)+, R0
+	mov	VELOCI, -(R0)
+	mov	ANGLE0, -(R0)
+	mov	OBJECY, -(R0)
+	mov	OBJECX, -(R0)
+	add	#8., varAddr
+101$:	dec	#000000
+	bne	10$
+	return
+
+TSTCDN:	.word	0
+TSTCRH:	.word	0
+TSTCUP:	.word	0
+TSTCLF:	.word	0
+
+ANGLE0:	.word	0
+VELOCI:	.word	0
+OBJECX:	.word	0
+OBJECY:	.word	0
+TEMPX:	.word	0
+TEMPY:	.word	0
+
+NORKUB:	.word	0
+NORMAL:	.word	0
+NORTYP:	.word	0
+
+
+; check where we are going (check angle)
+TSTANG:	clr	TSTCDN
+	clr	TSTCRH
+	clr	TSTCUP
+	clr	TSTCLF
+	; moving down
+	tst	ANGLE0
+	beq	10$
+	cmp	ANGLE0, #64.
+	bhis	10$
+	inc	TSTCDN
+10$:	; moving right
+	cmp	ANGLE0, #96.
+	blos	11$
+	inc	TSTCRH
+11$:	cmp	ANGLE0, #32.
+	bhis	12$
+	inc	TSTCRH
+12$:	; moving up
+	cmp	ANGLE0, #64.
+	blos	13$
+	inc	TSTCUP
+13$:	; moving left
+	cmp	ANGLE0, #32.
+	blos	14$
+	cmp	ANGLE0, #96.
+	bhis	14$
+	inc	TSTCLF
+14$:	return 
+
+; movement 01 - move by angle & velocity
+; -> TEMPX, TEMPY - coords (not float)
+MOVT01:	mov	ANGLE0, R0
+	asl	R0
+	asl	R0
+	mov	TBALPH(R0), R1
+	inc	R0
+	inc	R0
+	mov	TBALPH(R0), R2
+	mov	VELOCI, R3
+1$:	add	R1, OBJECX
+	add	R2, OBJECY
+	sob	R3, 1$
+	mov	OBJECX, R1
+	clrb	R1
+	swab	R1
+	mov	R1, TEMPX
+	mov	OBJECY, R2
+	clrb	R2
+	swab	R2
+	mov	R2, TEMPY
+	return 
+
+; movement 02 - add wall's normals
+MOVT02:	mov	TEMPX, R1
+	mov	TEMPY, R2
+	; going right ?
+	tst	TSTCRH
+	beq	20$
+	cmp	R1, #256.-16.-16.
+	blo	20$
+	mov	#64., R0	; <- (left) normal angle
+	call	ADDNR0		; add collision normal
+20$:	; going up ?
+	tst	TSTCUP		; testing top wall
+	beq	30$
+	cmp	R2, #16.
+	bhi	30$
+	mov	#32., R0	; (down) normal angle
+	call	ADDNR0
+30$:	; going down ?
+	tst	TSTCDN		; testing bottom wall
+	beq	40$
+	cmp	R2, #256.-16.-16.
+	blo	40$
+	mov	#96., R0	; (up) normal angle
+	call	ADDNR0
+40$:	; going left ?
+	tst	TSTCLF		; testing left wall
+	beq	50$
+	cmp	R1, #16.
+	bhi	50$
+	mov	#0., R0		; -> (right) normal angle
+	call	ADDNR0
+50$:	return 
+
+; clear normals table (4 x 3 words)
+CLRNOR:	clr	NORKUB
+	clr	NORMAL
+	clr	NORTYP
+	return 
+
+; add normal with zero background element, R0 - normal angle
+; don't change R1, R2
+ADDNR0:	mov	#1, NORTYP
+	mov	R0, NORMAL
+	clr	NORKUB
+	return 
+
+; correcting ANGLE0 from NORMAL
+ANGCOR:	tst	NORTYP
+	bne	.+4
+	return
+	mov	NORMAL, R1
+	mov	ANGLE0, R0	; reverting angle
+	add	#64., R0
+	call	ANGFIX
+	asl	R1
+	sub	R0, R1
+	mov	R1, R0
+	call	ANGFIX
+	mov	R0, ANGLE0
+	return 
+
+ANGFIX:	cmp	R0, #128.
+	blt	1$
+	sub	#128., R0
+	br	ANGFIX
+1$:	cmp	R0, #0
+	bge	2$
+	add	#128., R0
+	br	1$
+2$:	return 
 
 
 ; ///////////////////////////////////////////////////
@@ -168,11 +597,11 @@ SetAreaTas:
 
 AreaInit:
 	; create or modify area
-	tst	CurrentBuffer
-	beq	10$
-	mov	#AreaConfig2, @#177530
-	nop
-	return
+;	tst	CurrentBuffer
+;	beq	10$
+;	mov	#AreaConfig2, @#177530
+;	nop
+;	return
 10$:	mov	#AreaConfig, @#177530		; create area
 	nop
 	return
@@ -180,7 +609,11 @@ AreaInit:
 ViewInit:
 	; create view
 	mov	AreaConfig+2, ViewConfig+4	; put created area# to view config
-	mov	#ViewConfig, @#177530		; create view
+;	clr	ViewConfig+6
+;	tst	CurrentBuffer
+;	beq	10$
+;	mov	#256., ViewConfig+6
+10$:	mov	#ViewConfig, @#177530		; create or modify view
 	nop
 	return
 
@@ -191,8 +624,47 @@ AreaFree:
 	nop
 	return
 
+PaletteVm1Init:
+	; 25 = PLSAVx save palette
+	; 23 = PLMODx modify palette
+	; trying to make 'active view' badges be black-colored (they are not needed in full-screen app)
+	mov	#25, SaveVm1Palette		; .. just in case
+	mov	#SaveVm1Palette, @#177530	; save vm1 #0 palette
+	nop
+	movb	SaveVm1Palette+4.+15., OldVm1N15Color+1	; high byte
+	movb	SaveVm1Palette+4.+31., OldVm1N15Color+0	; low byte
+	; modify it
+	clrb	SaveVm1Palette+4.+15.		; clear them to black color
+	clrb	SaveVm1Palette+4.+31.
+	mov	#23, SaveVm1Palette		; 23 - modify vm1 #0 palette
+	mov	#SaveVm1Palette, @#177530
+	nop	 
+	return
+
+PaletteVm1Restore:
+	movb	OldVm1N15Color+1, SaveVm1Palette+4.+15.
+	movb	OldVm1N15Color+0, SaveVm1Palette+4.+31.
+	mov	#23, SaveVm1Palette		; modify vm1 #0 palette
+	mov	#SaveVm1Palette, @#177530
+	nop 
+	return
+
+OldVm1N15Color:	.word	0			; old #15 color to save it and restore after exit from program
+SaveVm1Palette:	.word	25			; 25 - save palette
+		.byte	0			; 1-bit for pixel
+		.byte	0			; palette #0
+		.blkw	16.			; 32 bytes of palette 
+
+AreaConfig:	.word	46			; 46 - ARCRE create and register area
+		.word	Vram0			; vddr
+		.word	512.			; dY (lines)
+		.word	64.			; dX (bytes per line)
+		.byte	1			; 4 colors
+		.byte	0			; palette #0 
+
+
 ; screen buffer (so called "area") description
-AreaConfig:	.word	0			; 0 - command "create and register area with TAS"
+AreaConfig1:	.word	0			; 0 - command "create and register area with TAS"
 		.word	0			; 0 - register area (!0 - modify area)
 		.word	256.			; dY (lines)
 		.word	64.			; dX (bytes per line)
@@ -255,8 +727,10 @@ ViewConfig:	.word	4			; 4 - command "create view"
 ; //////////////////////////////////////////////////////////////////////////////
 
 CurrentBuffer:	.word	0
+varAddr:	.word	0
+varCount:	.word	0
 
 Vram0 = 20000
-Vram1 = 60000
+Vram1 = Vram0 + 40000
 
 	.end	Start

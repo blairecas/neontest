@@ -14,12 +14,10 @@
 		fputs($f, decoct($vaddr) . "," . decoct($tas));
 		//
 		$vaddr += 64;
-		/*
 		if ($vaddr >= 4096) {
 			$vaddr = 0;
-			$memreg++;
+			// $memreg++;
 		}
-		*/
 		if ($col != 15  && $i < ($count-1)) { fputs($f, ", "); $col++; } else { fputs($f, "\n"); $col = 0; }
 	}
 	fclose($f); 
