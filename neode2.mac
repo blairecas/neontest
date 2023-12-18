@@ -33,6 +33,7 @@ Start:	mov	#1000, SP			; just in case
 90$:	; wait for VSYNC
 	tst	VsyCount
 	beq	90$
+	clr	VsyCount
 
 	; switch memory buffer
 	com	CurrentBuffer
