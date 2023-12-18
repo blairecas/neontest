@@ -15,14 +15,14 @@ Start:	mov	#1000, SP			; just in case
 
 	; vram init
 	; 1st video buffer
-	mov	#Vram0, R0
-	mov	#^B1001100101100110, R4
-	mov	#^B0110011010011001, R5
+	mov	#Vram0+64., R0			; skip 1st line - it's a border anyway
+	mov	#^B1100110011001100, R4
+	mov	#^B0011001100110011, R5
 	call	VramInit
 	; 2nd video buffer
-	mov	#Vram1, R0
-	mov	#^B0100010001010101, R4
-	mov	#^B0101010101000100, R5
+	mov	#Vram1+64., R0			; skip 1st line
+	mov	#^B0100010001000100, R4
+	mov	#^B0001000100010001, R5
 	call	VramInit
 
 	call	SetAreaTas
@@ -53,7 +53,7 @@ Start:	mov	#1000, SP			; just in case
 ; //////////////////////////////////////////////
 
 VramInit:
-	mov	#128., R3
+	mov	#127., R3			; skipped 1st line
 10$:	mov	#32., R2			; 64 bytes line
 20$:	mov	R4, (R0)+
 	sob	R2, 20$
