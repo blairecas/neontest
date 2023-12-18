@@ -98,8 +98,8 @@ VsyncProc:
 ; // Utils
 ; ///////////////////////////////////////////////////
 
-MsgNoMemory:
-	.asciz	"ERROR: Can't use all memory (.settop failed)"
+MsgSettopFailed:	.asciz	"ERROR: Can't use all memory (.settop failed)"
+MsgNoMemory:		.asciz	"ERROR: Can't allocate memory up to 120000"
 	.even
 
 GetAllMem:
@@ -108,9 +108,13 @@ GetAllMem:
 	tst	-(R0)				; -2 bytes
 	.setto
 	bcc	10$
+	.print	#MsgSettopFailed
+	.exit
+10$:	cmp	R0, #120000
+	bhis	20$
 	.print	#MsgNoMemory
 	.exit
-10$:	return
+20$:	return
 
 
 ; ///////////////////////////////////////////////////
@@ -254,13 +258,5 @@ CurrentBuffer:	.word	0
 
 Vram0 = 20000
 Vram1 = 60000
-;.=20000
-;Vram0:		.byte	0
-;
-;.=60000
-;Vram1:		.byte	0
-;
-;.=120000
-;EndOfThis:	.byte	1,2,3
 
 	.end	Start
