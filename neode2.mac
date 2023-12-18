@@ -1,5 +1,5 @@
 	.title	NEODE2
-	.mcall	.exit .print
+	.mcall	.exit .print .setto
 	.enabl	LC, AMA
 	.list	MEB
 
@@ -7,6 +7,8 @@
 
 	.asect
 	.=1000
+
+	.setto 120000
 
 Start:	mov	#1000, SP			; just in case 
 	clr	@#177560			; clear keyboard status? 
@@ -230,13 +232,15 @@ ViewConfig:	.word	4			; 4 - command "create view"
 
 CurrentBuffer:	.word	0
 
-.=20000
-Vram0:		.byte	0
-
-.=60000
-Vram1:		.byte	0
-
-.=120000
-EndOfThis:	.byte	1,2,3
+Vram0 = 20000
+Vram1 = 60000
+;.=20000
+;Vram0:		.byte	0
+;
+;.=60000
+;Vram1:		.byte	0
+;
+;.=120000
+;EndOfThis:	.byte	1,2,3
 
 	.end	Start
