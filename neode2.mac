@@ -8,9 +8,9 @@
 	.asect
 	.=1000
 
-	.setto 120000
 
-Start:	mov	#1000, SP			; just in case 
+Start:	.setto @#54				; all memory
+	mov	#1000, SP			; just in case 
 	clr	@#177560			; clear keyboard status? 
 
 	call	VSyncInit
