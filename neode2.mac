@@ -9,8 +9,8 @@
 	.=1000
 
 
-Start:	.setto @#54				; all memory
-	mov	#1000, SP			; just in case 
+Start:	mov	#1000, SP			; just in case 
+	call	GetAllMem			; get all memory (to USR)
 	clr	@#177560			; clear keyboard status? 
 
 	call	VSyncInit
@@ -92,6 +92,26 @@ VSyncFree:
 VsyncProc:
 	inc	VsyCount
 	rti
+
+
+; ///////////////////////////////////////////////////
+; // Utils
+; ///////////////////////////////////////////////////
+
+MsgNoMemory:
+	.asciz	"ERROR: Can't use all memory (.settop failed)"
+	.even
+
+GetAllMem:
+	mov	@#54, R0			; addr of RMON
+	mov	266(R0), R0			; addr of USR?
+	tst	-(R0)				; -2 bytes
+	.setto
+	bcc	10$
+	.print	#MsgNoMemory
+	.exit
+10$:	return
+
 
 ; ///////////////////////////////////////////////////
 ; // Window 
