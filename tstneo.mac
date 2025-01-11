@@ -31,7 +31,9 @@ Start:
 	call	GetProcessNum
 	mov	R1, KbdProcNum
 
-10$:	mov	#VAddr, VarY
+10$:
+	mov	#VAddr, VarY
+	; keyboard
 	mov	KeysBuffer+0., R0
 	call	PrintBinary
 	mov	KeysBuffer+2., R0
@@ -48,7 +50,13 @@ Start:
 	call	PrintBinary
 	mov	KeysBuffer+14., R0
 	call	PrintBinary
-
+	add	#8.*ScrWid, VarY
+	; mouse
+	mov	@#176200, R0
+	call	PrintOctal
+	mov	@#176202, R0
+	call	PrintOctal
+	
 	bit	#^B10000000, KeysBuffer		; AP2 (esc) pressed?
 	beq	10$
 
@@ -173,6 +181,7 @@ VAddr  = 40000
 
 VarY:		.word	0
 MsgStr000:	.asciz	"0000000000000000"
+MsgStr6:	.asciz	"000000"
 		.even
 
 ; print string
@@ -231,7 +240,26 @@ PrintBinary:
 	mov	#MsgStr000, R0
 	call	PrintStrVarY
 	return
-	
+
+; VarY - Vaddr, R0 - number
+PrintOctal:
+	mov	#MsgStr6, R2
+	clr	R1
+	mov	#5, R3
+	br	20$
+10$:	clr	R1
+	rol	R0
+	rol	R1
+	rol	R0
+	rol	R1
+20$:	rol	R0
+	rol	R1
+	add	#'0, R1
+	movb	R1, (R2)+
+	sob	R3, 10$
+	mov	#MsgStr6, R0
+	call	PrintStrVarY
+	return
 
 @include inc_cpu_font.mac
 

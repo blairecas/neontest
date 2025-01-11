@@ -1,0 +1,36 @@
+	.title	DECODE
+	.mcall	.print .exit
+
+	piccsr	== 161000	 ; 8259
+	picmr	== 161002
+
+	sndc0r	== 161010	 ; 8253.f
+	sndc1r	== 161012	 ;  
+	sndc2r	== 161014
+	sndcsr	== 161016
+
+	snlc0r	== 161020	 ; 8253.l
+	snlc1r	== 161022	 ;  
+	snlc2r	== 161024
+	snlcsr	== 161026
+
+	.asect
+	.=1000
+
+Start:	.print	#MsgHlo
+
+	mov	#357,	@#picmr		; mask all the ints exc. keyboard
+	mov	#74,	@#sndcsr	; set carring
+	mov	#10,	@#sndc0r	; friquency
+	mov	#10,	@#sndc0r	;
+	mov	#22,	@#snlcsr	;
+	mov	#110,	@#snlc0r	; volume
+
+	br	.
+
+Exit:	.exit
+
+MsgHlo:	.asciz	"DECODE VI53 demo"<12><15>"Tracker music baladinah_monstra_-tritone-.xm, converted by Kakos Nonos"
+	.even
+
+	.end	Start

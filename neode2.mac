@@ -11,7 +11,7 @@
 
 Start:	mov	#1000, SP			; just in case 
 	call	GetAllMem			; get all memory (to USR)
-	clr	@#177560			; clear keyboard status? 
+	clr	@#177560			; clear keyboard status?
 	call	VSyncInit			; set vsync process
 
 	; vram clear
