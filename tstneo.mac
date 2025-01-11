@@ -245,7 +245,7 @@ PrintBinary:
 PrintOctal:
 	mov	#MsgStr6, R2
 	clr	R1
-	mov	#5, R3
+	mov	#6, R3
 	br	20$
 10$:	clr	R1
 	rol	R0
