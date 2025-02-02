@@ -438,14 +438,11 @@ SetNot:	; data is for 1MHz VI53, so adjust it
 
 ; init VI53 counters
 IniVis:
-	mov	#^B00110110, @#snlcsr		; i dunno what i am doing here
-	mov	#^B01110110, @#snlcsr
-	mov	#^B10110110, @#snlcsr
+	mov	#^B00010010, @#snlcsr		; i dunno what i am doing here
 	mov	#377, @#snlc0r
-	mov	#377, @#snlc0r
+	mov	#^B01010010, @#snlcsr
 	mov	#377, @#snlc1r
-	mov	#377, @#snlc1r
-	mov	#377, @#snlc2r
+	mov	#^B10010010, @#snlcsr
 	mov	#377, @#snlc2r
 	mov	#^B00110110, @#sndcsr
 	mov	#^B01110110, @#sndcsr
