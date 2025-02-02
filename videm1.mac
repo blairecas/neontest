@@ -363,7 +363,7 @@ PlayChannels:
 	beq	10$
 	return
 10$:	; wait 1/50 sec
-	mov	#11000, R0
+	mov	#12000, R0
 	sob	R0, .
 ;	tst	VsyCnt
 ;	beq	.-4
