@@ -27,6 +27,8 @@ Exit:	; exiting
 	call	KeyboardFree
 	call	WindowFree
 	clr	@#picmr
+	clr	r0
+	mthlt	#tcflg
 	clr	R0
 	.exit
 
