@@ -131,10 +131,10 @@ Bkw100:		.word	0
 FrameCount:	.word	0
 
 VsyncInit:
-	mfhlt	#V.Scrn
-	mov	R0, BkwScrn			; 7116
-	mov	#7126, R0
-	mthlt	#V.Scrn
+;	mfhlt	#V.Scrn
+;	mov	R0, BkwScrn			; 7116
+;	mov	#7126, R0
+;	mthlt	#V.Scrn
 	mov	@#100, Bkw100
 	mov	#VsyncProc, @#100
 	return
@@ -142,8 +142,8 @@ VsyncInit:
 
 VSyncFree:
 	mov	Bkw100, @#100
-	mov	BkwScrn, R0
-	mthlt	#V.Scrn
+;	mov	BkwScrn, R0
+;	mthlt	#V.Scrn
 	return
 
 
@@ -324,11 +324,13 @@ KeyboardProc:
 
 Main:	; init
 	call	IniVis
+  	mov	#1, R0				; timeof
+	mthlt	#tcflg				; or else counter 2 of first VI53 will be fucked 
 	mov	#Screen1Data, R0
 	mov	#C_VADDR, R1
 	call	Unpack
 	call	PrepareRoll
-	mov	#^B11101111, @#picmr		; mask ints exc keyboard	
+	mov	#^B11001111, @#picmr		; mask ints exc keyboard	
 
 ; play patterns
 PlayPatterns:
@@ -363,11 +365,11 @@ PlayChannels:
 	beq	10$
 	return
 10$:	; wait 1/50 sec
-	mov	#12000, R0
-	sob	R0, .
-;	tst	VsyCnt
-;	beq	.-4
-;	clr	VsyCnt
+;	mov	#12000, R0
+;	sob	R0, .
+	tst	VsyCnt
+	beq	.-4
+	clr	VsyCnt
 	; draw notes roll
 	call	NotesRoll
 	; keypress?
