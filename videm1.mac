@@ -27,8 +27,7 @@ Exit:	; exiting
 	call	KeyboardFree
 	call	WindowFree
 	clr	@#picmr
-	clr	r0
-	mthlt	#tcflg
+	timeon
 	clr	R0
 	.exit
 
@@ -326,8 +325,7 @@ KeyboardProc:
 
 Main:	; init
 	call	IniVis
-  	mov	#1, R0				; timeof
-	mthlt	#tcflg				; or else counter 2 of first VI53 will be fucked 
+	timeoff
 	mov	#Screen1Data, R0
 	mov	#C_VADDR, R1
 	call	Unpack
