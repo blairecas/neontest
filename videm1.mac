@@ -26,7 +26,7 @@ Exit:	; exiting
 	call	VSyncFree
 	call	KeyboardFree
 	call	WindowFree
-	clr	@#picmr
+;	clr	@#picmr
 	timeon
 	clr	R0
 	.exit
@@ -324,13 +324,13 @@ KeyboardProc:
 ; //////////////////////////////////////////////////////////////////////////////
 
 Main:	; init
-	call	IniVis
 	timeoff
+	call	IniVis
 	mov	#Screen1Data, R0
 	mov	#C_VADDR, R1
 	call	Unpack
 	call	PrepareRoll
-	mov	#^B11001111, @#picmr		; mask ints exc keyboard	
+;	mov	#^B11001111, @#picmr		; mask ints exc keyboard, rtc (not needed though)
 
 ; play patterns
 PlayPatterns:
@@ -365,8 +365,6 @@ PlayChannels:
 	beq	10$
 	return
 10$:	; wait 1/50 sec
-;	mov	#12000, R0
-;	sob	R0, .
 	tst	VsyCnt
 	beq	.-4
 	clr	VsyCnt
@@ -426,10 +424,10 @@ SetNot:	; data is for 1MHz VI53, so adjust it
 	asr	R2
 	asr	R2
 	bis	#^B00110110, R2
-	mov	R2, @#sndcsr
+	mov	R2, @#snlcsr
 	return
 10$:	; normal frequency
-	mov	#sndc0r, R0
+	mov	#snlc0r, R0
 	asl	R2
 	add	R2, R0
 	mov	R1, (R0)
@@ -439,16 +437,15 @@ SetNot:	; data is for 1MHz VI53, so adjust it
 
 
 ; init VI53 counters
-IniVis:
-	mov	#^B00010010, @#snlcsr		; i dunno what i am doing here
-	mov	#377, @#snlc0r
-	mov	#^B01010010, @#snlcsr
-	mov	#377, @#snlc1r
-	mov	#^B10010010, @#snlcsr
-	mov	#377, @#snlc2r
-	mov	#^B00110110, @#sndcsr
-	mov	#^B01110110, @#sndcsr
-	mov	#^B10110110, @#sndcsr
+; in Neon outputs of SNL go to gates of SND
+IniVis:	; SNL     [CCHLMMMD]
+	mov	#^B00110110, @#snlcsr
+	mov	#^B01110110, @#snlcsr
+	mov	#^B10110110, @#snlcsr
+	; SND
+	mov	#^B00110010, @#sndcsr
+	mov	#^B01110010, @#sndcsr
+	mov	#^B10110010, @#sndcsr
 	return
 
 
