@@ -330,7 +330,7 @@ Main:	; init
 	mov	#C_VADDR, R1
 	call	Unpack
 	call	PrepareRoll
-;	mov	#^B11001111, @#picmr		; mask ints exc keyboard, rtc (not needed though)
+;	mov	#^B11001111, @#picmr		; mask ints exc keyboard, rtc
 
 ; play patterns
 PlayPatterns:

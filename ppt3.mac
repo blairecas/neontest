@@ -155,13 +155,13 @@ VsyCnt:	.word	0
 
 ; init VI53's
 IniVis:	; SND (first VI)
-	mov	#^B00110100, @#sndcsr	; counter 0, mode 2, both bytes
-	mov	#^B01110100, @#sndcsr
-	mov	#^B10110100, @#sndcsr
+	mov	#^B00110110, @#sndcsr	; counter 0, mode 3, both bytes
+	mov	#^B01110110, @#sndcsr
+	mov	#^B10110110, @#sndcsr
 	; SNL     [CCHLMMMD] (second VI)
-	mov	#^B00110010, @#snlcsr	; counter 0, mode 1, both bytes
-	mov	#^B01110010, @#snlcsr
-	mov	#^B10110010, @#snlcsr
+	mov	#^B00010100, @#snlcsr	; counter 0, mode 2, lsb
+	mov	#^B01010100, @#snlcsr
+	mov	#^B10010100, @#snlcsr
 	return
 
 
@@ -766,16 +766,17 @@ PT3_VI53_SET:
 	mov	R4, R0 ; nois -+  +- tone
 	bic	#^B1111111111110110, R0
 	cmp	#^B0000000000001000, R0		; noise must be off, tone must be on
-	bne	10$				; if not - silence channel
-	; fixed amplitude
+	beq	10$				; if not - silence channel
+	; silence channel
+	mov	#377, (R2)
+	mov	#377, (R2)
+	mov	#377, 10(R2)
+	return
+10$:	; fixed amplitude
 	; what to do with amplitude envelope? (nothing I guess)
-	movb	(R3), R1
-	bic	#^B1111111111110000, R1
-	cmp	R1, #2
-	blo	10$
-	mov	#15., R0
-	sub	R1, R0
-	neg	R0
+	movb	(R3), R0
+	bic	#^B1111111111110000, R0
+	movb	Vi2div(R0), R0
 	; note on
 	clr	R1
 	bisb	1(R5), R1
@@ -783,24 +784,17 @@ PT3_VI53_SET:
 	bisb	(R5), R1
 	ash	#4, R1
 	; set freq
-	movb	R1, (R2)			; set to SNL
+	mov	R1, (R2)			; set to SND
 	swab	R1
-	movb	R1, (R2)
-	swab	R1
+	mov	R1, (R2)
 	; set vol
-	asr	R1				; freq/2 = full volume
-	ash	R0, R1
-	movb	R1, 10(R2)			; set to SND
-	swab 	R1
-	movb	R1, 10(R2)
-	br	99$
+	mov	R0, 10(R2)			; set to SNL
+	return
 
-10$:	; note off - set 'volume' to 0
-	movb	#0, (R2)
-	movb	#0, (R2)
-
-99$:	return
-
+Vi2div:	.byte	255., 064., 050., 040.
+	.byte	034., 028., 022., 016.
+	.byte	012., 008., 006., 004.
+	.byte	003., 002., 001., 000.
 
 ; // Mute //////////////////////////////////////////////////////////////////////
 
