@@ -8,6 +8,8 @@ Start: 	clr	@#177560
 10$:	tst	@#177560
 	beq	10$
 	mov	@#177562, R1
+	cmp	R1, #3				; Ctrl-C
+	beq	Exit
 	call	PrintOctal
 	br	Start
 

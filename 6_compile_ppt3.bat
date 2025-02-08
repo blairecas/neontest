@@ -11,9 +11,11 @@ php -f ../scripts/lst2bin.php _ppt3.lst ./release/ppt3.sav sav
 if %ERRORLEVEL% NEQ 0 ( exit /b )
 
 del _ppt3.mac
-rem del _ppt3.lst
+del _ppt3.lst
 
 ..\scripts\rt11dsk d neon.dsk .\release\ppt3.sav >NUL
 ..\scripts\rt11dsk a neon.dsk .\release\ppt3.sav >NUL
 
 ..\..\neon\neonbtl /autostart /disk0:..\neontest\neon.dsk /boot1
+
+echo.

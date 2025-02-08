@@ -51,11 +51,11 @@ Start:
 	mov	KeysBuffer+14., R0
 	call	PrintBinary
 	add	#8.*ScrWid, VarY
-	; mouse
-	mov	@#176200, R0
-	call	PrintOctal
-	mov	@#176202, R0
-	call	PrintOctal
+;	; mouse
+;	mov	@#176200, R0
+;	call	PrintOctal
+;	mov	@#176202, R0
+;	call	PrintOctal
 	
 	bit	#^B10000000, KeysBuffer		; AP2 (esc) pressed?
 	beq	10$

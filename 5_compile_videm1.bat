@@ -11,9 +11,11 @@ php -f ../scripts/lst2bin.php _videm1.lst ./release/videm1.sav sav
 if %ERRORLEVEL% NEQ 0 ( exit /b )
 
 del _videm1.mac
-rem del _videm1.lst
+del _videm1.lst
 
 ..\scripts\rt11dsk d neon.dsk .\release\videm1.sav >NUL
 ..\scripts\rt11dsk a neon.dsk .\release\videm1.sav >NUL
 
 ..\..\neon\neonbtl /autostart /disk0:..\neontest\neon.dsk /boot1
+
+echo.
