@@ -8,9 +8,13 @@
 	.asect
 	.=1000
 
-Start:	call	GetAllMem
+Start:	mov	#1000, SP
+	clr	@#177560
+	call	GetAllMem
 	call	ReadFile
+	call	KeyboardInit
 	call	Play
+	call	KeyboardFree
 	mov	ErrCode, @#52			; set error to exit from .com
 	clr	R0				; .hreset before .exit
 	.exit
@@ -131,11 +135,11 @@ Play:	timeoff					; macro from p16mac, needed or else counter2 of VI53 will be u
 	tst	END_OF_PT3FILE
 	bne	90$
 	; check keypress
-	tstb	@#177560
-	bpl	10$
-20$:	movb	@#177562, R0
-	tstb	@#177560
-	bmi	20$
+	tst	KeyCurrent
+	beq	10$
+	tst	KeyAp2				; if AP2 was pressed
+	beq	90$				; need to set ErrCode != 0
+	dec	ErrCode				; for exit from .com file if we are in it
 90$:	; exiting
 	call	IniVis
 	mov	(SP)+, @#100
@@ -150,16 +154,142 @@ VsyCnt:	.word	0
 
 
 ; init VI53's
-IniVis:	; SNL     [CCHLMMMD]
-	mov	#^B00110010, @#snlcsr	; counter 0, mode 1, both bytes
-	mov	#^B01110010, @#snlcsr
-	mov	#^B10110010, @#snlcsr
-	; SND
+IniVis:	; SND (first VI)
 	mov	#^B00110100, @#sndcsr	; counter 0, mode 2, both bytes
 	mov	#^B01110100, @#sndcsr
 	mov	#^B10110100, @#sndcsr
+	; SNL     [CCHLMMMD] (second VI)
+	mov	#^B00110010, @#snlcsr	; counter 0, mode 1, both bytes
+	mov	#^B01110010, @#snlcsr
+	mov	#^B10110010, @#snlcsr
 	return
 
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Keyboard
+; //////////////////////////////////////////////////////////////////////////////
+
+KbdSave:	.word	0, 0
+KbdPrio:	.word	0
+KbdProcDsc:	.word	0
+KbdProcNum:	.word	0
+KeysBuffer:	.blkw	8.
+
+KeyCurrent:	.word	0
+KeysBegin:
+KeyAp2:		.word	0, 00., ^B10000000
+Key0:		.word	0, 14., ^B00100000
+Key1:		.word	0, 02., ^B00000010
+Key2:		.word	0, 02., ^B00000100
+Key3:		.word	0, 02., ^B00000001
+KeyUp:		.word	0, 12., ^B00010000
+KeyDown:	.word	0, 10., ^B00010000
+KeyLeft:	.word	0, 08., ^B00100000
+KeyRight:	.word	0, 10., ^B00001000
+KeySpace:	.word	0, 08., ^B00001000
+KeyShift:	.word	0, 08., ^B01000000
+KeyTab:		.word	0, 02., ^B10000000
+KeyEnter:	.word	0, 12., ^B00001000
+KeysEnd:
+
+
+KeyboardInit:
+	; save some keyboard-related values? and set priority?
+	mfhlt	#V.Kbd
+	mov	R0, KbdSave
+	mfhlt	#V.Kbd+2
+	mov	R0, KbdSave+2
+	mov	KbdSave, R1
+	add	#P.Pri, R1
+	mfhlt	R1
+	mov	R0, KbdPrio
+	mov	KbdSave, R0
+	himpri	#-1
+	; new keyboard process
+       	newromp	#KeyboardProc
+	mov	R0, KbdProcDsc
+	mov	R0, R5
+	call	GetProcessNum
+	mov	R1, KbdProcNum 
+	return
+
+
+KeyboardFree:
+	; stop keyboard process
+	mtps	#200
+	clr	R0
+	mthlt	#157700
+	kilproc	KbdProcNum
+	mov	KbdSave+2, R0
+	mthlt	#V.Kbd+2
+	mov	KbdSave, R0
+	mthlt	#V.Kbd
+	bic	#M.Kbd, @#PicMr
+	mov	KbdSave, R0
+	himpri	KbdPrio
+	mtps	#0
+	return
+
+
+ClearKeys:
+	mov	#KeysBegin, R0
+10$:	clr	(R0)+
+	cmp	(R0)+, (R0)+
+	cmp	R0, #KeysEnd
+	blo	10$
+	return
+
+
+KeyboardProc:
+	setpri	#50000				; set priority of process
+	unpvec	#v.kbd				; unprotect keyboard vector
+	clr	R0
+	provec	#v.kbd				; protect keyboard vector
+10$:	waitint	#m.kbd				; wait keyboard inverrupt
+	mov	#120, @#KbdCsr			; ???
+	mov	#KeysBuffer, R4
+	mov	#8., R5
+20$:	mov	@#KbdBuf, (R4)+
+	sob	R5, 20$
+	mov	#302, @#KbdCsr
+	; check matrix
+	clr	KeyCurrent
+	mov	#KeysBegin, R5
+30$:	mov	2(R5), R0
+	add	#KeysBuffer, R0
+	bit	4(R5), (R0)
+	beq	40$
+	inc	(R5)
+	inc	KeyCurrent
+	br	50$
+40$:	clr	(R5)
+50$:	add	#6., R5
+	cmp	R5, #KeysEnd
+	blo	30$
+	; again ...
+	br	10$
+
+
+; R5 - process dsc
+; return: R1 - num
+GetProcessNum:
+	mov	#PdPtr, R2
+	clr	R1
+10$:	mfhlt	R2
+	inc	R1
+	mov	R0, R2
+	beq	20$
+	add	#P.DSucc, R2
+	cmp	R0, R5
+	bne	10$
+	br	30$
+20$:	clr	R1
+30$:	return 
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // PT3
+; //////////////////////////////////////////////////////////////////////////////
 
 ; Based on:
 ; CSI MultiPlayer 3 for CSIDOS by KUVO
