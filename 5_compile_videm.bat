@@ -1,7 +1,7 @@
 @echo off
 echo.
 echo ===========================================================================
-echo Compiling
+echo Compiling VIDEM1
 echo ===========================================================================
 php -f ../scripts/preprocess.php videm1.mac
 if %ERRORLEVEL% NEQ 0 ( exit /b )
@@ -15,6 +15,23 @@ del _videm1.lst
 
 ..\scripts\rt11dsk d neon.dsk .\release\videm1.sav >NUL
 ..\scripts\rt11dsk a neon.dsk .\release\videm1.sav >NUL
+
+echo.
+echo ===========================================================================
+echo Compiling VIDEM2
+echo ===========================================================================
+php -f ../scripts/preprocess.php videm2.mac
+if %ERRORLEVEL% NEQ 0 ( exit /b )
+..\scripts\macro11 -ysl 32 -yus -m ..\scripts\sysmac.sml -l _videm2.lst _videm2.mac
+if %ERRORLEVEL% NEQ 0 ( exit /b )
+php -f ../scripts/lst2bin.php _videm2.lst ./release/videm2.sav sav
+if %ERRORLEVEL% NEQ 0 ( exit /b )
+
+del _videm2.mac
+rem del _videm2.lst
+
+..\scripts\rt11dsk d neon.dsk .\release\videm2.sav >NUL
+..\scripts\rt11dsk a neon.dsk .\release\videm2.sav >NUL
 
 ..\..\neon\neonbtl /autostart /disk0:..\neontest\neon.dsk /boot1
 

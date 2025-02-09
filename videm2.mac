@@ -1,5 +1,4 @@
-	.title	PPT3
-	.mcall	.print .ttout .exit .herr .setto .csige .cstat .readw .close
+	.title	VIDEM2
 	.enabl	LC
 	.list	MEB
 
@@ -9,147 +8,29 @@
 	.=1000
 
 Start:	clr	@#177560
-	call	GetAllMem
-	call	ReadFile
 	call	KeyboardInit
-	call	Play
+	call	WindowInit
+	call	VSyncInit
+	call	Show
+	call	VSyncFree
+	call	WindowFree
 	call	KeyboardFree
-	mov	ErrCode, @#52			; set error to exit from .com if needed
-	clr	R0				; .hreset before .exit
-	.exit
+	emt	350
 
 
-; get RT-11 mem (not all Neon mem)
-GetAllMem:
-	mov	@#54, R0			; addr of RMON
-	mov	266(R0), R0			; addr of USR?
-	tst	-(R0)				; -2 bytes
-	.setto
-	bcc	10$
-	.print	#MsgSettop
-	.exit
-10$:	mov	R0, RamTop
-	cmp	R0, #100000			; at least top must be 100000 (i want so :)
-	bhis	20$
-	.print	#MsgNoMemory
-	.exit
-20$:	return
-
-
-; read file
-ReadFile:
-	; open file
-fDSPAC =: End					; .csigen device handler buffer
-	mov	SP, R5				; save SP before .csigen (will change it)
-	.csige	#fDSPAC, #fDEXT, , #fStrBuf	; load handler, open file channel from user input
-	mov	R5, SP				; restore SP	
-	mov	R0, PT3FILE_MODULE1_ADDR	; adjust .pt3 file starting addr if .csige loaded device handler
-	; print csi string
-	.print	#fStrBuf-4
-	; get file size and check for overflow
-	.cstat	#fAREA, #3, #fCSTAT		; get channel info
-	bcc	10$
-	.print	MsgNoChannel
-	br	99$
-10$:	mov	fCSTAT+4, R4			; file size in blocks
-	swab	R4				; file size in words
-	clrb	R4
-	mov	R4, R5				; R5 = file size in words
-	asl	R4				; R4 = file size in bytes
-	add	PT3FILE_MODULE1_ADDR, R4	; check for overflow
-	cmp	R4, RamTop
-	blo	20$
-	.print	#MsgFileIsBig
-	br	99$
-	; reading
-20$:	.readw	#fAREA, #3, PT3FILE_MODULE1_ADDR, R5, #0
-	bcc	30$
-	tstb	@#52				; EOF error ?
-	beq	30$
-	.print	#MsgReadError
-	br	99$
-30$:	.close	#3
-	; now must get real file size
-	tstb	-(R4)
-	beq	.-2
-	inc	R4				; addr AFTER last byte
-	mov	R4, PT3FILE_END_ADDR
-	call	OutHeaderInfo
-	return
-99$:	clr	R0				; perform .hreset before .exit
-	.exit
-
-
-; Out vortex|protracker header string, must eliminate consecutive spaces
-OutHeaderInfo:
-	mov	PT3FILE_MODULE1_ADDR, R1	; header addr
-	clr	R2				; spaces length
-	mov	#99., R3			; header max length
-10$:	movb	(R1)+, R0			; get character
-	beq	90$				; abort if zero
-	inc	R2				; increase spaces length
-	cmpb	R0, #40				; is it a space?
-	beq	30$
-	clr	R2				; not a space - clear spaces length
-30$:	cmp	R2, #1				; spaces more than 1?
-	bhi	40$				; if more - not printing character
-	.ttout
-40$:	sob	R3, 10$
-90$:	.print	#fDEXT+2			; print zero-length string for CRLF
-	return
-
-
-; some data
-ErrCode:	.word	0
-RamTop:		.word	0			; top addr of available RAM
-
-		.ascii	<12><15>"> "
-fStrBuf:	.blkb	82.
-fDEXT:		.rad50	"PT3"			; default input extension
-		.word	0,0,0			; default output extensions
-fAREA:		.blkw	5			; parameters buffer for .readw macro
-fCSTAT:		.blkw	6			; channel status info buffer
-
-MsgSettop:	.asciz	"ERROR: Can't use all memory (.settop failed)"
-MsgNoMemory:	.asciz	"ERROR: Can't allocate memory up to 100000"
-MsgReadError:	.asciz	"ERROR: File read error"
-MsgFileIsBig:	.asciz	"ERROR: File is too big to fit in memory"
-MsgNoChannel:	.asciz	"ERROR: Unable to open file channel #3"
-		.even 
-
-
-; init VI's, play
-Play:	timeoff					; macro from p16mac, needed or else counter2 of VI53 will be used
-	mov	@#100, -(SP)
-	mov	#VsyInt, @#100
+; show must go on
+Show:	timeoff
 	call	IniVis
 	call	Pt3Init	
-10$:	; wait 1/50s
-	tst	VsyCnt
+10$:	tst	VsyCnt
 	beq	10$
 	clr	VsyCnt
-	; main play routine
 	call	Pt3Play
-	; is it end of playing
-	tst	END_OF_PT3FILE
-	bne	90$
-	; check keypress
 	tst	KeyCurrent
 	beq	10$
-	tst	KeyAp2				; if AP2 was pressed
-	beq	90$				; need to set ErrCode != 0
-	dec	ErrCode				; for exit from .com file if we are in it
-90$:	; exiting
-	call	IniVis
-	mov	(SP)+, @#100
+90$:	call	IniVis
 	timeon
 	return
-
-
-; (!) save/restore registers, it's not a separate process
-VsyInt:	inc	(PC)+
-VsyCnt:	.word	0
-	rti
 
 
 ; init VI53's
@@ -162,6 +43,86 @@ IniVis:	; SND (first VI)
 	mov	#^B01010100, @#snlcsr
 	mov	#^B10010100, @#snlcsr
 	return
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Graphics
+; //////////////////////////////////////////////////////////////////////////////
+
+BkwScrn:	.word	0
+Bkw100:		.word	0
+
+VsyncInit:
+;	mfhlt	#V.Scrn				; change to 64Hz (50Hz in emulator)
+;	mov	R0, BkwScrn			; 7116
+;	mov	#7126, R0
+;	mthlt	#V.Scrn
+	mov	@#100, Bkw100
+	mov	#VsyInt, @#100
+	return
+
+
+VSyncFree:
+	mov	Bkw100, @#100
+;	mov	BkwScrn, R0
+;	mthlt	#V.Scrn
+	return
+
+
+; (!) save/restore registers, it's not a separate process
+VsyInt:	inc	(PC)+
+VsyCnt:	.word	0
+	rti
+
+
+WindowInit:
+	mov	#PaletteConfig, @#177530	; create palette
+	nop					; believe it or not, NOP next to a system call is necessary
+	mov	PaletteId, AreaPalette
+	mov	#AreaConfig, @#177530		; create screen buffer (so called "area")
+	nop
+	mov	AreaConfig+2, @#AreaId		; put a screen buffer id to the window description
+	mov	#ViewConfig, @#177530		; create window (so called "view")	
+	nop
+	return
+
+
+WindowFree:
+	; free window and palette
+	mov	#2, AreaConfig			; command "free area"
+	mov	#AreaConfig, @#177530		; free area and its view(s)
+	nop
+	return
+
+
+; palette configuration
+PaletteConfig:	.word	17			; command "create palette"
+PaletteId:	.byte	2			; 16 colors
+		.byte	0			; palette #		
+PaletteBuf:	; palette words G5 G4 G3 R4 R3 R2 B4 B3  - G2 G1 G0 R1 R0 B2 B1 B0
+		; divided by 2 bytes, first part are 16 upper bytes, then 16 lower bytes
+	        .byte	0, 2, 24, 26, 240, 242, 264, 266, 0, 3, 34, 37, 340, 343, 374, 377
+        	.byte	0, 7, 30, 37, 340, 347, 370, 377, 0, 7, 30, 37, 340, 347, 370, 377
+
+; screen buffer (so called "area") description
+AreaConfig:	.word	46			; command "create area"
+		.word	Screen1Data		; address of screen buffer or area id
+		.word	192.			; rows count
+		.word	128.			; bytes count in row
+AreaPalette:	.byte	2			; 16 colors
+		.byte	0			; palette 0
+
+; window (so called "view") description
+ViewConfig:	.word	4			; command "create view"
+ViewId:		.word	0			; view id
+AreaId:		.word	1			; area id
+		.word	0			; vertical content offset
+		.word	0			; horisontal content offset
+		.word	64.			; top position (row)
+		.word	192.+64.		; bottom position (row)
+		.word	5.			; left position (column)
+		.word	20.			; right position (column), auto-adjust
+		.byte	2,2			; scale x,y (0 = *4, 1 = *2, 2 = *1)
 
 
 ; //////////////////////////////////////////////////////////////////////////////
@@ -385,10 +346,10 @@ INTEGRATION_POINTS:
 	FRAME_NUMBER:		.word 0 				; Incremented by one each time the PLAY entry point is accessed
 	PARAMETERS_AY1_ADDR:	.word PARAMETERS_AY1 			; Address of the operating parameters of AY1
 	AYREGS_AY1:		.word PARAMETERS_AY1 + PARAM_AYREGS	; Address of last sent AY1 register values
-	PT3FILE_MODULE1_ADDR:	.word 0					; PT3 file address
-	PT3FILE_END_ADDR:	.word 0					; Address of end PT3 file
+	PT3FILE_MODULE1_ADDR:	.word MusicBegin			; PT3 file address
+	PT3FILE_END_ADDR:	.word MusicEnd				; Address of end PT3 file
 	END_OF_PT3FILE:		.word 0 				; CODA. End of PT3 file reached (incremented by one each time)
-	NO_REPEAT_MODE:		.word 1 				; Play without repeat. Set (not zero) before INIT call.
+	NO_REPEAT_MODE:		.word 0 				; Play without repeat. Set (not zero) before INIT call.
 	REPETITION_NUMBER: 	.word 0 				; Number of elapsed repetitions after end of PT3 file
 	CUR_PARAMS_ADDR:	.word 0
 
@@ -1304,6 +1265,17 @@ NT_DATA:	.byte   PARAM_TAB_WORK_NEW_0 - PARAM_TAB_WORK, 0, TAB_C_NEW_0 - PT3_TAB
 PARAMETERS_AY1:	.blkb	PARAM_SIZE
 		.even
 
-; data for handlers and .pt3 file is here 
+; fairlight title music arranged by Davos
+MusicBegin:
+@includebin ./music/davos_fairlight.pt3
+MusicEnd:
+
+; picture below will be also window data, so align it
+.=.+16.
+.=.&^B1111111111110000
+ 
+; grafonii
+@include ./graphics/fairlight_zx.mac
+
 End:
 	.end	Start
