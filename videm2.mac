@@ -21,6 +21,17 @@ Start:	clr	@#177560
 ; show must go on
 Show:	timeoff
 	call	IniVis
+
+;	mov	#1, R0
+;	mov	#2000., R1
+;	mov	#sndc0r, R2
+;	mov	R1, (R2)			; set to SND (first VI)
+;	swab	R1
+;	mov	R1, (R2)
+;	mov	R0, 10(R2)			; set to SNL (second VI)
+;	br .
+
+
 	call	Pt3Init	
 10$:	tst	VsyCnt
 	beq	10$
@@ -715,8 +726,8 @@ PT3_VI53_SET:
 	bic	#^B1111111111110110, R0
 	cmp	#^B0000000000001000, R0		; noise must be off, tone must be on
 	beq	10$				; if not - silence channel
-	; silence channel (how to do it easy way?)
-	mov	#377, 10(R2)
+	; silence channel
+	mov	#1, 10(R2)
 	br	90$
 10$:	; fixed amplitude (what to do with amplitude envelope? nothing I guess)
 	movb	(R3), R0			; amplitude [000MVVVV] M=0 fixed, M=1 enveloped
@@ -737,10 +748,11 @@ PT3_VI53_SET:
 	inc	R3				; next amplitude reg
 	return
 
-Vi2div:	.byte	255., 064., 050., 040.
-	.byte	034., 028., 022., 016.
-	.byte	012., 008., 006., 004.
-	.byte	003., 002., 001., 001.
+Vi2div:
+	.byte	001., 255., 145., 116.
+	.byte	064., 048., 034., 025.
+	.byte	018., 013., 009., 007.
+	.byte	005., 004., 003., 002.
 
 
 ; // Mute //////////////////////////////////////////////////////////////////////
