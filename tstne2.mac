@@ -1,0 +1,40 @@
+	.mcall	.ttyou
+	.enabl	LC, AMA
+	.list	MEB
+	.asect
+	.=1000
+
+Start: 	clr	@#177560
+10$:	tst	@#177560
+	beq	10$
+	mov	@#177562, R1
+	cmp	R1, #3				; Ctrl-C
+	beq	Exit
+	call	PrintOctal
+	br	Start
+
+Exit:	clr	R0
+	emt	350
+
+; R1 - number to print
+PrintOctal:
+	; 1st bit
+	clr	R0
+	mov	#6, R3
+	br	22$
+20$:	; get number
+	clr	R0
+	rol	R1
+	rol	R0
+	rol	R1
+	rol	R0
+22$:	rol	R1
+	rol	R0
+	add	#'0, R0
+	.ttyou
+	sob	R3, 20$
+	mov	#40, R0
+	.ttyou
+	return
+
+	.end Start

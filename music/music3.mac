@@ -1,0 +1,4601 @@
+	.radix 10
+
+NoteDivs:
+	.word	4
+	.word	61162, 57736, 54495, 51413, 48543, 45808, 43252, 40816, 38520, 36363, 34317, 32393
+	.word	30581, 28860, 27240, 25713, 24271, 22909, 21621, 20408, 19264, 18181, 17161, 16196
+	.word	15288, 14430, 13620, 12856, 12134, 11453, 10810, 10204, 09633, 09090, 08583, 08097
+	.word	07645, 07215, 06811, 06426, 06067, 05727, 05405, 05102, 04814, 04545, 04290, 04048
+	.word	03822, 03607, 03404, 03214, 03033, 02863, 02702, 02551, 02407, 02272, 02145, 02024
+	.word	01910, 01803, 01702, 01606, 01516, 01431, 01351, 01275, 01203, 01136, 01072, 01012
+	.word	00955, 00901, 00851, 00803, 00758, 00715, 00675, 00637, 00602, 00568, 00536, 00506
+	.word	00477, 00451, 00425, 00401, 00379, 00357, 00337, 00318, 00301, 00284, 00268, 00253
+
+musicstart:
+	.word	PAT1
+	.word	PAT2
+	.word	PAT1
+	.word	PAT2
+	.word	PAT3
+	.word	PAT4
+	.word	PAT3
+	.word	PAT5
+	.word	PAT6
+	.word	PAT7
+	.word	PAT8
+	.word	PAT9
+	.word	PAT10
+	.word	0
+	.word	musicstart+2
+	.even
+PAT1:
+	.word	LUT1_1
+	.word	LUT2_1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_1:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	135 ; pause 8
+	.byte	21
+LUT2_1:
+	.byte	0
+	.byte	220 ; pause 93
+	.byte	0
+	.byte	220 ; pause 93
+	.byte	0
+	.byte	195 ; pause 68
+	.byte	0
+	.even
+PAT2:
+	.word	LUT1_2
+	.word	LUT2_2
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_2:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	23
+LUT2_2:
+	.byte	0
+	.byte	220 ; pause 93
+	.byte	0
+	.byte	220 ; pause 93
+	.byte	0
+	.byte	195 ; pause 68
+	.byte	0
+	.even
+PAT3:
+	.word	LUT1_3
+	.word	LUT2_3
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_3:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	135 ; pause 8
+	.byte	21
+LUT2_3:
+	.byte	0
+	.byte	142 ; pause 15
+	.byte	71
+	.byte	59
+	.byte	61
+	.byte	132 ; pause 5
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	139 ; pause 12
+	.byte	65
+	.byte	128 ; pause 1
+	.byte	64
+	.byte	128 ; pause 1
+	.byte	63
+	.byte	128 ; pause 1
+	.byte	64
+	.byte	128 ; pause 1
+	.byte	65
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	59
+	.byte	57
+	.byte	55
+	.byte	53
+	.byte	51
+	.byte	49
+	.byte	0
+	.byte	144 ; pause 17
+	.byte	71
+	.byte	59
+	.byte	61
+	.byte	132 ; pause 5
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	139 ; pause 12
+	.byte	65
+	.byte	128 ; pause 1
+	.byte	64
+	.byte	128 ; pause 1
+	.byte	63
+	.byte	128 ; pause 1
+	.byte	64
+	.byte	128 ; pause 1
+	.byte	65
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	61
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	133 ; pause 6
+	.byte	78
+	.byte	66
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	133 ; pause 6
+	.byte	75
+	.byte	63
+	.byte	140 ; pause 13
+	.byte	63
+	.even
+PAT4:
+	.word	LUT1_4
+	.word	LUT2_4
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	54
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	54
+	.byte	59
+	.byte	63
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_4:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	23
+LUT2_4:
+	.byte	76
+	.byte	64
+	.byte	137 ; pause 10
+	.byte	63
+	.byte	62
+	.byte	61
+	.byte	60
+	.byte	59
+	.byte	142 ; pause 15
+	.byte	69
+	.byte	57
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	141 ; pause 14
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	141 ; pause 14
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	141 ; pause 14
+	.byte	75
+	.byte	63
+	.byte	138 ; pause 11
+	.byte	62
+	.byte	61
+	.byte	60
+	.byte	59
+	.byte	142 ; pause 15
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	141 ; pause 14
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	50
+	.byte	48
+	.byte	46
+	.byte	44
+	.byte	43
+	.byte	41
+	.byte	39
+	.byte	37
+	.even
+PAT5:
+	.word	LUT1_5
+	.word	LUT2_5
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	56
+	.byte	59
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	56
+	.byte	59
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	64
+	.byte	56
+	.byte	60
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	56
+	.byte	60
+	.byte	63
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_5:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	28
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	20
+LUT2_5:
+	.byte	76
+	.byte	64
+	.byte	137 ; pause 10
+	.byte	63
+	.byte	62
+	.byte	61
+	.byte	60
+	.byte	59
+	.byte	142 ; pause 15
+	.byte	69
+	.byte	57
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	141 ; pause 14
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	141 ; pause 14
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	141 ; pause 14
+	.byte	75
+	.byte	63
+	.byte	139 ; pause 12
+	.byte	62
+	.byte	61
+	.byte	60
+	.byte	142 ; pause 15
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	141 ; pause 14
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	72
+	.byte	60
+	.byte	133 ; pause 6
+	.byte	75
+	.byte	63
+	.byte	133 ; pause 6
+	.byte	76
+	.byte	64
+	.byte	141 ; pause 14
+	.byte	75
+	.byte	63
+	.byte	140 ; pause 13
+	.byte	63
+	.even
+PAT6:
+	.word	LUT1_6
+	.word	LUT2_6
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_6:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	135 ; pause 8
+	.byte	23
+LUT2_6:
+	.byte	73
+	.byte	61
+	.byte	167 ; pause 40
+	.byte	62
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	128 ; pause 1
+	.byte	62
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	128 ; pause 1
+	.byte	62
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	0
+	.byte	132 ; pause 5
+	.byte	61
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	132 ; pause 5
+	.byte	60
+	.byte	61
+	.byte	136 ; pause 9
+	.byte	62
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	133 ; pause 6
+	.byte	73
+	.byte	61
+	.byte	131 ; pause 4
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	75
+	.byte	63
+	.byte	149 ; pause 22
+	.byte	71
+	.byte	59
+	.byte	149 ; pause 22
+	.byte	66
+	.byte	54
+	.byte	139 ; pause 12
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	130 ; pause 3
+	.byte	56
+	.byte	148 ; pause 21
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	132 ; pause 5
+	.byte	56
+	.even
+PAT7:
+	.word	LUT1_7
+	.word	LUT2_7
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	61
+	.byte	64
+	.byte	68
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_7:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	25
+LUT2_7:
+	.byte	56
+	.byte	168 ; pause 41
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	130 ; pause 3
+	.byte	0
+	.byte	162 ; pause 35
+	.byte	64
+	.byte	52
+	.byte	133 ; pause 6
+	.byte	66
+	.byte	54
+	.byte	133 ; pause 6
+	.byte	68
+	.byte	56
+	.byte	175 ; pause 48
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	128 ; pause 1
+	.byte	55
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	130 ; pause 3
+	.byte	0
+	.byte	162 ; pause 35
+	.byte	68
+	.byte	56
+	.byte	133 ; pause 6
+	.byte	69
+	.byte	57
+	.byte	133 ; pause 6
+	.byte	71
+	.byte	59
+	.byte	132 ; pause 5
+	.byte	59
+	.even
+PAT8:
+	.word	LUT1_8
+	.word	LUT2_8
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	57
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	59
+	.byte	63
+	.byte	66
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_8:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	23
+	.byte	135 ; pause 8
+	.byte	23
+LUT2_8:
+	.byte	73
+	.byte	61
+	.byte	149 ; pause 22
+	.byte	69
+	.byte	57
+	.byte	149 ; pause 22
+	.byte	64
+	.byte	52
+	.byte	141 ; pause 14
+	.byte	73
+	.byte	61
+	.byte	149 ; pause 22
+	.byte	71
+	.byte	59
+	.byte	149 ; pause 22
+	.byte	73
+	.byte	61
+	.byte	141 ; pause 14
+	.byte	75
+	.byte	63
+	.byte	149 ; pause 22
+	.byte	71
+	.byte	59
+	.byte	149 ; pause 22
+	.byte	66
+	.byte	54
+	.byte	141 ; pause 14
+	.byte	75
+	.byte	63
+	.byte	149 ; pause 22
+	.byte	76
+	.byte	64
+	.byte	149 ; pause 22
+	.byte	78
+	.byte	66
+	.byte	140 ; pause 13
+	.byte	66
+	.even
+PAT9:
+	.word	LUT1_9
+	.word	LUT2_9
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	59
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	60
+	.byte	63
+	.byte	68
+	.byte	0
+	.byte	183 ; pause 56
+	.byte	0
+	.byte	255
+LUT1_9:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	128 ; pause 1
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	20
+	.byte	0
+	.byte	133 ; pause 6
+	.byte	0
+LUT2_9:
+	.byte	68
+	.byte	168 ; pause 41
+	.byte	69
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	67
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	69
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	67
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	69
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	67
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	130 ; pause 3
+	.byte	0
+	.byte	162 ; pause 35
+	.byte	38
+	.byte	68
+	.byte	133 ; pause 6
+	.byte	58
+	.byte	71
+	.byte	141 ; pause 14
+	.byte	62
+	.byte	72
+	.byte	141 ; pause 14
+	.byte	68
+	.byte	72
+	.byte	68
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	71
+	.byte	70
+	.byte	69
+	.byte	68
+	.byte	144 ; pause 17
+	.byte	69
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	67
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	69
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	67
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	69
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	128 ; pause 1
+	.byte	67
+	.byte	128 ; pause 1
+	.byte	68
+	.byte	130 ; pause 3
+	.byte	0
+	.byte	162 ; pause 35
+	.byte	38
+	.byte	68
+	.byte	133 ; pause 6
+	.byte	62
+	.byte	72
+	.byte	140 ; pause 13
+	.byte	72
+	.even
+PAT10:
+	.word	LUT1_10
+	.word	LUT2_10
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	56
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	56
+	.byte	61
+	.byte	63
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	57
+	.byte	61
+	.byte	64
+	.byte	0
+	.byte	128 ; pause 1
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	57
+	.byte	61
+	.byte	66
+	.byte	0
+	.byte	0
+	.byte	255
+LUT1_10:
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	25
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	136 ; pause 9
+	.byte	49
+	.byte	46
+	.byte	40
+	.byte	37
+	.byte	34
+	.byte	27
+	.byte	21
+	.byte	135 ; pause 8
+	.byte	21
+LUT2_10:
+	.byte	73
+	.byte	160 ; pause 33
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	74
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	128 ; pause 1
+	.byte	72
+	.byte	128 ; pause 1
+	.byte	73
+	.byte	71
+	.byte	69
+	.byte	67
+	.byte	65
+	.byte	63
+	.byte	61
+	.byte	59
+	.byte	57
+	.byte	55
+	.byte	53
+	.byte	51
+	.byte	49
+	.byte	47
+	.byte	45
+	.byte	43
+	.byte	0
+	.byte	220 ; pause 93
+	.byte	0
+	.byte	160 ; pause 33
+	.byte	0
+
+
+	.even
+	.radix 8

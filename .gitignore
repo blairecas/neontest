@@ -1,0 +1,8 @@
+*.lst
+*.obj
+*.zip
+*.bin
+*.log
+_*.mac
+system.dsk
+rt11.exe

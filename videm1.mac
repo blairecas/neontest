@@ -1,0 +1,555 @@
+	.title	VIDEM1
+	.mcall	.exit .setto
+
+@include p16mac.mac
+
+	.asect
+	.=1000
+
+C_VADDR	 = 40000
+C_SCRWID = 64.
+
+Start:	mov	#1000, SP
+	clr	@#177560
+
+	; preparing
+	call	GetAllMem
+	call	WindowInit
+	call	KeyboardInit
+	call	VSyncInit
+
+	; main
+	jmp	Main
+
+Exit:	; exiting
+	call	IniVis
+	call	VSyncFree
+	call	KeyboardFree
+	call	WindowFree
+;	clr	@#picmr
+	timeon
+	clr	R0
+	.exit
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Utils 
+; //////////////////////////////////////////////////////////////////////////////
+
+; zx0 unpacker by reddie
+; R0 - source, R1 - dest
+Unpack:	clr	R2
+	movb	#200, R3
+	sxt	R5
+10$:	call	50$
+	movb	(R0)+, (R1)+
+	sob	R2, .-2
+	aslb	R3
+	bcs	30$
+	call	50$
+20$:	mov	R1, R4
+	add	R5, R4
+	movb	(R4)+, (R1)+
+	sob	R2, .-2
+	aslb	R3
+	bcc	10$
+30$:	mov	#-2, R2
+	call	60$
+	incb	R2
+	bne	.+4
+40$:	return
+	swab	R2
+	mov	R2, R5
+	clrb	R5
+	bisb	(R0)+, R5
+	asr	R5
+	mov	#1, R2
+	bcs	.+6
+	call	80$
+	inc	R2
+	br	20$
+50$:	incb	R2
+60$:	aslb	R3
+	bne	70$
+	movb	(R0)+, R3
+	rolb	R3
+70$:	bcs	40$
+80$:	aslb	R3
+	rol	R2
+	br	60$
+
+
+; R5 - process dsc
+; return: R1 - num
+GetProcessNum:
+	mov	#PdPtr, R2
+	clr	R1
+10$:	mfhlt	R2
+	inc	R1
+	mov	R0, R2
+	beq	20$
+	add	#P.DSucc, R2
+	cmp	R0, R5
+	bne	10$
+	br	30$
+20$:	clr	R1
+30$:	return 
+
+
+RamTop:		.word	0			; top addr of available RAM
+MsgSettop:	.asciz	"? can't use all memory (.settop failed)"
+MsgNoMemory:	.asciz	"? can't allocate memory up to 100000"
+		.even 
+
+GetAllMem:
+	mov	@#54, R0			; addr of RMON
+	mov	266(R0), R0			; addr of USR? (in case of set USR NOSWAP)
+	tst	-(R0)				; -2 bytes
+	.setto
+	bcc	10$
+	.print	#MsgSettop
+	.exit
+10$:	mov	R0, RamTop
+	cmp	R0, #100000
+	bhis	20$
+	.print	#MsgNoMemory
+	.exit
+20$:	; and clear it
+	mov	#End, R0
+	mov	RamTop, R3
+	sub	R0, R3
+	clrb	(R0)+
+	sob	R3, .-2
+	return  
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Graphics
+; //////////////////////////////////////////////////////////////////////////////
+
+BkwScrn:	.word	0
+Bkw100:		.word	0
+FrameCount:	.word	0
+
+VsyncInit:
+;	mfhlt	#V.Scrn
+;	mov	R0, BkwScrn			; 7116
+;	mov	#7126, R0
+;	mthlt	#V.Scrn
+	mov	@#100, Bkw100
+	mov	#VsyncProc, @#100
+	return
+
+
+VSyncFree:
+	mov	Bkw100, @#100
+;	mov	BkwScrn, R0
+;	mthlt	#V.Scrn
+	return
+
+
+; (!) save/restore registers, it's not a separate process
+VsyncProc:
+	inc	(PC)+
+VsyCnt:	.word	0
+	rti
+
+
+WindowInit:
+	mov	#PaletteConfig, @#177530	; create palette
+	nop					; believe it or not, NOP next to a system call is necessary
+	mov	PaletteId, AreaPalette
+	mov	#AreaConfig, @#177530		; create screen buffer (so called "area")
+	nop
+	mov	AreaConfig+2, @#AreaId		; put a screen buffer id to the window description
+	mov	#ViewConfig, @#177530		; create window (so called "view")	
+	nop
+	return
+
+
+WindowFree:
+	; free window and palette
+	mov	#2, AreaConfig			; command "free area"
+	mov	#AreaConfig, @#177530		; free area and its view(s)
+	nop
+	return
+
+
+; palette configuration
+PaletteConfig:	.word	17			; command "create palette"
+PaletteId:	.byte	1			; 4 colors
+		.byte	0			; palette #		
+PaletteBuf:	; palette words G5 G4 G3 R4 R3 R2 B4 B3  - G2 G1 G0 R1 R0 B2 B1 B0
+		.byte	0,0,0,0,0,0,0,0,0,0,0,0 ; 12. not used bytes (except #0 - border)
+		.byte	0, 3, 340, 34 		; upper bytes of palette words
+		.byte	0,0,0,0,0,0,0,0,0,0,0,0 ; 12. not used bytes (except #0)
+		.byte	0, 7, 340, 30 		; lower bytes of palette words
+
+; screen buffer (so called "area") description
+AreaConfig:	.word	46			; command "create area"
+		.word	C_VADDR			; address of screen buffer or area id
+		.word	256.			; rows count
+		.word	64.			; bytes count in row
+AreaPalette:	.byte	1			; 4 colors
+		.byte	0			; palette 0
+
+; window (so called "view") description
+ViewConfig:	.word	4			; command "create view"
+ViewId:		.word	0			; view id
+AreaId:		.word	1			; area id
+		.word	0			; vertical content offset
+		.word	0			; horisontal content offset
+		.word	20.			; top position (row)
+		.word	255.+20.		; bottom position (row)
+		.word	5.			; left position (column)
+		.word	20.			; right position (column)
+		.byte	1,2			; scale x,y (0 = *4, 1 = *2, 2 = *1)
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Keyboard
+; //////////////////////////////////////////////////////////////////////////////
+
+KbdSave:	.word	0, 0
+KbdPrio:	.word	0
+KbdProcDsc:	.word	0
+KbdProcNum:	.word	0
+KeysBuffer:	.blkw	8.
+
+KeyCurrent:	.word	0
+KeysBegin:
+KeyAp2:		.word	0, 00., ^B10000000
+Key0:		.word	0, 14., ^B00100000
+Key1:		.word	0, 02., ^B00000010
+Key2:		.word	0, 02., ^B00000100
+Key3:		.word	0, 02., ^B00000001
+KeyUp:		.word	0, 12., ^B00010000
+KeyDown:	.word	0, 10., ^B00010000
+KeyLeft:	.word	0, 08., ^B00100000
+KeyRight:	.word	0, 10., ^B00001000
+KeySpace:	.word	0, 08., ^B00001000
+KeyShift:	.word	0, 08., ^B01000000
+KeyTab:		.word	0, 02., ^B10000000
+KeyEnter:	.word	0, 12., ^B00001000
+KeysEnd:
+
+
+KeyboardInit:
+	; save some keyboard-related values? and set priority?
+	mfhlt	#V.Kbd
+	mov	R0, KbdSave
+	mfhlt	#V.Kbd+2
+	mov	R0, KbdSave+2
+	mov	KbdSave, R1
+	add	#P.Pri, R1
+	mfhlt	R1
+	mov	R0, KbdPrio
+	mov	KbdSave, R0
+	himpri	#-1
+	; new keyboard process
+       	newromp	#KeyboardProc
+	mov	R0, KbdProcDsc
+	mov	R0, R5
+	call	GetProcessNum
+	mov	R1, KbdProcNum 
+	return
+
+
+KeyboardFree:
+	; stop keyboard process
+	mtps	#200
+	clr	R0
+	mthlt	#157700
+	kilproc	KbdProcNum
+	mov	KbdSave+2, R0
+	mthlt	#V.Kbd+2
+	mov	KbdSave, R0
+	mthlt	#V.Kbd
+	bic	#M.Kbd, @#PicMr
+	mov	KbdSave, R0
+	himpri	KbdPrio
+	mtps	#0
+	return
+
+
+ClearKeys:
+	mov	#KeysBegin, R0
+10$:	clr	(R0)+
+	cmp	(R0)+, (R0)+
+	cmp	R0, #KeysEnd
+	blo	10$
+	return
+
+
+WaitKeypress:
+	clr	KeyCurrent
+	tst	KeyCurrent
+	beq	.-4
+	clr	KeyCurrent
+	return
+
+
+KeyboardProc:
+	setpri	#50000				; set priority of process
+	unpvec	#v.kbd				; unprotect keyboard vector
+	clr	R0
+	provec	#v.kbd				; protect keyboard vector
+10$:	waitint	#m.kbd				; wait keyboard inverrupt
+	mov	#120, @#KbdCsr			; ???
+	mov	#KeysBuffer, R4
+	mov	#8., R5
+20$:	mov	@#KbdBuf, (R4)+
+	sob	R5, 20$
+	mov	#302, @#KbdCsr
+	; check matrix
+	clr	KeyCurrent
+	mov	#KeysBegin, R5
+30$:	mov	2(R5), R0
+	add	#KeysBuffer, R0
+	bit	4(R5), (R0)
+	beq	40$
+	inc	(R5)
+	inc	KeyCurrent
+	br	50$
+40$:	clr	(R5)
+50$:	add	#6., R5
+	cmp	R5, #KeysEnd
+	blo	30$
+	; again ...
+	br	10$
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Main code 
+; //////////////////////////////////////////////////////////////////////////////
+
+Main:	; init
+	timeoff
+	call	IniVis
+	mov	#Screen1Data, R0
+	mov	#C_VADDR, R1
+	call	Unpack
+	call	PrepareRoll
+;	mov	#^B11001111, @#picmr		; mask ints exc keyboard, rtc
+
+; play patterns
+PlayPatterns:
+	mov	#MusicStart, PatAddr
+Loop:	; play one pattern
+	clr	Chan0Wait
+	clr	Chan1Wait
+	clr	Chan2Wait
+	mov	@PatAddr, R5
+	bne	10$
+	add	#2, PatAddr
+	mov	@PatAddr, PatAddr
+	br	Loop
+10$:	mov	(R5)+, Chan1Addr
+	mov	(R5)+, Chan2Addr
+	mov	R5, Chan0Addr
+	clr	PatEnd
+	call	PlayChannels
+	add	#2, PatAddr
+	br	Loop
+
+; play one pattern, 3 channels
+PlayChannels:
+	mov	#Chan0Wait, R5
+	call	PlayChannel
+	mov	#Chan1Wait, R5
+	call	PlayChannel
+	mov	#Chan2Wait, R5
+	call	PlayChannel
+	; end of pattern?
+	tst	PatEnd
+	beq	10$
+	return
+10$:	; wait 1/50 sec
+	tst	VsyCnt
+	beq	.-4
+	clr	VsyCnt
+	; draw notes roll
+	call	NotesRoll
+	; keypress?
+	tst	KeyCurrent
+	beq	PlayChannels
+	jmp	Exit
+
+; R5 - #ChanXWait
+PlayChannel:
+	; test pattern end
+	tst	PatEnd
+	bne	99$
+	; test wait ticks
+	dec	(R5)
+	bpl	99$
+	clr	(R5)
+	; get current playing note (or silence)
+	mov	2(R5), R1
+	; convert to 1MHz divisor
+	asl	R1
+	mov	NoteDivs(R1), R1
+	; set chip/counter and play note (or silence)
+	mov	4(R5), R2
+	call	SetNot
+	; next note data
+	movb	@6(R5), R4
+	bmi	10$				; it's pause or end of pattern
+	; normal note
+	mov	R4, 2(R5)			; set next note
+	br	90$
+10$:	bic	#^B1111111110000000, R4		; leave 7 bits
+	cmp	#^B0000000001111111, R4		; is it end of pattern?
+	bne	20$
+	; end of pattern
+	inc	PatEnd
+	return
+20$:	; pause
+	mov	R4, (R5)
+90$:	; advance notes addr
+	inc	6(R5)
+99$:	return
+
+
+; R1 - divisor, R2 - channel
+; info: on real VI53 you barely able to hear anything with divisor lower than 10. (except harmonics at very low level)
+;       so you don't need to reinit counter on silence (just write 2 or 4 there)
+SetNot:	; data is for 1MHz VI53, so adjust it
+	asl	R1
+	; assume that divisor lower than 10(8) is silence
+	cmp	#12, R1
+	blo	10$
+	; silence channel then
+	swab	R2
+	asr	R2
+	asr	R2
+	bis	#^B00110110, R2
+	mov	R2, @#snlcsr
+	return
+10$:	; normal frequency
+	mov	#snlc0r, R0
+	asl	R2
+	add	R2, R0
+	mov	R1, (R0)
+	swab	R1
+	mov	R1, (R0)
+	return
+
+
+; init VI53 counters
+; in Neon outputs of SNL go to gates of SND
+IniVis:	; SNL     [CCHLMMMD]
+	mov	#^B00110110, @#snlcsr
+	mov	#^B01110110, @#snlcsr
+	mov	#^B10110110, @#snlcsr
+	; SND
+	mov	#^B00110010, @#sndcsr
+	mov	#^B01110010, @#sndcsr
+	mov	#^B10110010, @#sndcsr
+	return
+
+
+; variables
+PatEnd:		.word	0
+PatAddr:	.word	0
+
+Chan0Wait:	.word	0
+Chan0Note:	.word	4
+Chan0Chip:	.word	0
+Chan0Addr:	.word	0
+
+Chan1Wait:	.word	0
+Chan1Note:	.word	4
+Chan1Chip:	.word	1
+Chan1Addr:	.word	0
+
+Chan2Wait:	.word	0
+Chan2Note:	.word	4
+Chan2Chip:	.word	2
+Chan2Addr:	.word	0
+
+C_LINE_Y =: 118.*C_SCRWID+C_VADDR
+C_LINES  =: 64.
+
+; prepare scrolling notes
+PrepareRoll:
+	; clear buffer (with all ram to video addr)
+	mov	#Screen1Data, R5
+10$:	clr	(R5)+
+	cmp	R5, #C_VADDR
+	blo	10$
+	; draw rectangle
+	mov	#C_LINE_Y-C_SCRWID+6., R5
+	mov	#C_LINES+1*C_SCRWID+C_LINE_Y+6., R4
+	mov	#C_SCRWID-12., R3
+20$:	movb	#^B10001000, (R5)+
+	movb	#^B10001000, (R4)+
+	sob	R3, 20$
+	return
+
+; draw and roll notes
+; they are positioned not correctly but it's just for demo
+NotesRoll:
+	; use title data as buffer
+	mov	#Screen1Data, R5
+	; chan 0 - synth arpedggio
+	clr	R1
+	mov	Chan0Note, R0
+	beq	10$
+	add	#C_LINE_Y-32., R0
+	movb	#^B00111111, R1
+10$:	mov	R0, (R5)+			; addr
+	mov	R1, (R5)+			; color
+	; chan 1 - bass & drum
+	clr	R1
+	mov	Chan1Note, R0
+	beq	20$
+	add	#C_LINE_Y-13., R0
+	movb	#^B00010101, R1
+20$:	mov	R0, (R5)+
+	mov	R1, (R5)+
+	; chan 2 - guitar
+	mov	Chan2Note, R0
+	beq	30$
+	add	#C_LINE_Y-18., R0
+	cmp	R0, #C_LINE_Y+56.
+	blos	22$
+	mov	#C_LINE_Y+56., R0
+22$:	movb	#^B00101010, R1
+30$:	mov	R0, (R5)+
+	mov	R1, (R5)+
+	; notes are set
+ScrollThen:
+	mov	#C_LINES*12.+Screen1Data, R5
+	mov	R5, R4
+	mov	#3., R2
+	; clear bottom line
+02$:	mov	-(R5), R1
+	mov	-(R5), R0
+	beq	04$
+	clrb	(R0)
+04$:	sob	R2, 02$
+	; scroll lines
+	mov	#C_LINES-1, R3
+10$:	mov	#3., R2
+20$:	mov	-(R5), R1			; color
+	mov	R1, -(R4)
+	mov	-(R5), R0			; addr
+	mov	R0, -(R4)
+	beq	30$
+	add	#C_SCRWID, (R4)
+	movb	R1, C_SCRWID(R0)
+	clrb	(R0)
+30$:	sob	R2, 20$
+	sob	R3, 10$
+	return
+
+
+; music data
+@include ./music/music3.mac
+
+; screen image data
+@include videm1_grf.mac
+
+
+End:	.end	Start

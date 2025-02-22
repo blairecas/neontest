@@ -1,0 +1,266 @@
+	.mcall	.exit .print
+	.enabl	LC, AMA
+	.list	MEB
+
+@include p16mac.mac
+
+	.asect
+	.=1000
+
+Start:
+	.print	#MsgCls
+	
+	call	WindowInit
+	clr	@#177560			; clear keyboard status?
+
+	; save some keyboard-related values? and set priority?
+	mfhlt	#V.Kbd
+	mov	R0, KbdSave
+	mfhlt	#V.Kbd+2
+	mov	R0, KbdSave+2
+	mov	KbdSave, R1
+	add	#P.Pri, R1
+	mfhlt	R1
+	mov	R0, KbdPrio
+	mov	KbdSave, R0
+	himpri	#-1
+	; new keyboard process
+       	newromp	#KeyboardProc
+	mov	R0, KbdProcDsc
+	mov	R0, R5
+	call	GetProcessNum
+	mov	R1, KbdProcNum
+
+10$:
+	mov	#VAddr, VarY
+	; keyboard
+	mov	KeysBuffer+0., R0
+	call	PrintBinary
+	mov	KeysBuffer+2., R0
+	call	PrintBinary
+	mov	KeysBuffer+4., R0
+	call	PrintBinary
+	mov	KeysBuffer+6., R0
+	call	PrintBinary
+	mov	KeysBuffer+8., R0
+	call	PrintBinary
+	mov	KeysBuffer+10., R0
+	call	PrintBinary
+	mov	KeysBuffer+12., R0
+	call	PrintBinary
+	mov	KeysBuffer+14., R0
+	call	PrintBinary
+	add	#8.*ScrWid, VarY
+;	; mouse
+;	mov	@#176200, R0
+;	call	PrintOctal
+;	mov	@#176202, R0
+;	call	PrintOctal
+	
+	bit	#^B10000000, KeysBuffer		; AP2 (esc) pressed?
+	beq	10$
+
+	; stop keyboard process
+	mtps	#200
+	clr	R0
+	mthlt	#157700
+	kilproc	KbdProcNum
+	mov	KbdSave+2, R0
+	mthlt	#V.Kbd+2
+	mov	KbdSave, R0
+	mthlt	#V.Kbd
+	bic	#M.Kbd, @#PicMr
+	mov	KbdSave, R0
+	himpri	KbdPrio
+
+	; exit program	
+	call	WindowFree
+	.exit
+
+MsgCls: .asciz	<33>"[[2J"
+
+; // Utils /////////////////////////////////////
+
+; R5 - process dsc
+; return: R1 - num
+GetProcessNum:
+	mov	#PdPtr, R2
+	clr	R1
+10$:	mfhlt	R2
+	inc	R1
+	mov	R0, R2
+	beq	20$
+	add	#P.DSucc, R2
+	cmp	R0, R5
+	bne	10$
+	br	30$
+20$:	clr	R1
+30$:	return
+
+; // Keyboard process //////////////////////////
+
+KbdSave:	.word	0, 0
+KbdPrio:	.word	0
+KbdProcDsc:	.word	0
+KbdProcNum:	.word	0
+KeysBuffer:	.blkw	8.
+
+KeyboardProc:
+	setpri	#50000				; set priority of process
+	unpvec	#v.kbd				; unprotect keyboard vector
+	clr	R0
+	provec	#v.kbd				; protect keyboard vector
+10$:	waitint	#m.kbd				; wait keyboard inverrupt
+	mov	#120, @#KbdCsr			; ???
+	mov	#KeysBuffer, R4
+	mov	#8., R5
+20$:	mov	@#KbdBuf, (R4)+
+	sob	R5, 20$
+	mov	#302, @#KbdCsr
+	br	10$
+
+
+; // Window procedures /////////////////////////
+
+WindowInit:
+	mov	#PaletteConfig, @#177530	; create palette
+	nop					; believe it or not, NOP next to a system call is necessary
+	mov	PaletteId, AreaPalette
+	mov	#AreaConfig, @#177530		; create screen buffer (so called "area")
+	nop
+	mov	AreaConfig+2, @#AreaId		; put a screen buffer id to the window description
+	mov	#ViewConfig, @#177530		; create window (so called "view")
+	nop
+	return
+
+WindowFree:
+	; free window and palette
+	mov	#2, AreaConfig			; command "free area"
+	mov	#AreaConfig, @#177530		; free area and its view
+	nop
+	mov	#21, PaletteConfig		; command "free palette"
+	mov	#PaletteConfig, @#177530	; free palette
+	nop
+	return
+
+; palette configuration
+PaletteConfig:	.word	17			; command "create palette"
+PaletteId:	.byte	1			; 4 colors
+		.byte	0			; palette #		
+PaletteBuf:	; palette words G5 G4 G3ÅR4 R3 R2ÅB4 B3Å - ÅG2 G1 G0ÅR1 R0ÅB2 B1 B0
+		.byte	^B11100011, 0,0,0,0,0,0,0,0,0,0,0 ; 12. not used bytes (except #0 - border)
+		.byte	0, 3, 340, 34 		; upper bytes of palette words
+		.byte	^B11100111, 0,0,0,0,0,0,0,0,0,0,0 ; 12. not used bytes (except #0)
+		.byte	0, 7, 340, 30 		; lower bytes of palette words
+
+; screen buffer (so called "area") description
+AreaConfig:	.word	46			; command "create area"
+		.word	40000			; address of screen buffer or area id
+		.word	256.			; rows count
+		.word	256./4.			; bytes count in row
+AreaPalette:	.byte	1			; 4 colors
+		.byte	0			; palette 0
+
+; window (so called "view") description
+ViewConfig:	.word	4			; command "create view"
+ViewId:		.word	0			; view id
+AreaId:		.word	0			; area id
+		.word	0			; vertical content offset
+		.word	0			; horisontal content offset
+		.word	0			; top position (row)
+		.word	256.			; bottom position (row)
+		.word	0			; left position (column)
+		.word	16.			; right position (column)
+		.byte	1,2			; scale x,y (0 = *4, 1 = *2, 2 = *1)
+
+
+; // Printing //////////////////////////////////
+
+ScrWid = 64.
+VAddr  = 40000 
+
+VarY:		.word	0
+MsgStr000:	.asciz	"0000000000000000"
+MsgStr6:	.asciz	"000000"
+		.even
+
+; print string
+; R0 - text addr
+; R5 - vaddr
+; codes in string - [0..3] - change color
+PriColorsTbl:
+	.word	^B1111111111111111, ^B1010101010101010, ^B0101010101010101, ^B0000000000000000
+
+PrintStr:
+	mov	#ScrWid, R2
+	clr	R3			; font mask, default will be red
+10$:	movb	(R0)+, R1
+	beq	99$
+	cmp	R1, #3.			; is it special symbol
+	bhi	20$
+	; change font color mask
+	asl	R1
+	mov	PriColorsTbl(R1), R3
+	br	10$
+20$:	sub	#'0, R1			; relative to '0'
+	bge	30$
+	mov	#16., R1		; any chars below '0' converted to #16 (here its a space)
+30$:	asl	R1			; *16 bytes (character font size)
+	asl	R1
+	asl	R1
+	asl	R1
+	add	#FontCpuData, R1	; R1 = font data
+	.rept	8.
+	mov	(R1)+, R4
+	bic	R3, R4
+	mov	R4, (R5)
+	add	R2, R5
+	.endr
+	sub	#ScrWid*8.-2, R5	; advance vaddr
+	br	10$
+99$:	return 
+
+; R0 - #Msg, VarY - Vaddr
+PrintStrVarY:
+	mov	VarY, R5
+	call	PrintStr
+	add	#ScrWid*12., VarY
+	return
+
+; VarY - Vaddr, R0 - number
+PrintBinary:
+	mov	#MsgStr000, R4
+	mov	#16., R3
+10$:	clr	R1
+	rol	R0
+	rol	R1
+	add	#'0, R1
+	movb	R1, (R4)+
+	sob	R3, 10$
+	mov	#MsgStr000, R0
+	call	PrintStrVarY
+	return
+
+; VarY - Vaddr, R0 - number
+PrintOctal:
+	mov	#MsgStr6, R2
+	clr	R1
+	mov	#6, R3
+	br	20$
+10$:	clr	R1
+	rol	R0
+	rol	R1
+	rol	R0
+	rol	R1
+20$:	rol	R0
+	rol	R1
+	add	#'0, R1
+	movb	R1, (R2)+
+	sob	R3, 10$
+	mov	#MsgStr6, R0
+	call	PrintStrVarY
+	return
+
+@include inc_cpu_font.mac
+
+	.end	Start

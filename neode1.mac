@@ -1,0 +1,249 @@
+	.title	NEODE1
+	.mcall	.exit .print .fetch .looku .readw .close
+	.enabl	LC, AMA
+	.list	MEB
+
+@include p16mac.mac 
+
+VXsize = 208.
+VYSize = 150.
+
+	.asect
+	.=1000
+
+Start:	mov	#1000, SP			; just in case 
+	clr	@#177560			; clear keyboard status? 
+
+	call	WindowInit
+
+10$:	; rotate palette
+	call	PaletteRotation
+	tst	@#177560
+	beq	10$
+	mov	@#177562, R0
+	cmp	R0, #33
+	beq	90$
+	cmp	R0, #40
+	bne	10$
+	; clear vbuf
+	mov	#VBuffer, R0
+	mov	#VYSize*VXSize/2, R3
+	clr	(R0)+
+	sob	R3, .-2
+	; read next data
+	inc	CurPic
+	cmp	CurPic, #3
+	blt	20$
+	clr	CurPic
+20$:	mov	#PalCycles, ReadAddr		; starting address is palette cycles
+	mov	CurPic, R0
+	asl	R0
+	mov	PicStartTbl(R0), ReadStartBlk	; starting block (63. blocks each picture)
+	call	ReadFile			; read file there
+	bcs	30$				; error?
+	; readed, need to set # of palette there
+	mov	PaletteNumber, PaletteConfig+2
+	; continue 
+	br	10$
+
+30$:	.print	ErrMsg				; or else print something and exit
+90$:	; EXIT EXIT
+	call	WindowFree
+	.exit
+
+PaletteRotation:
+	mov	#16., 101$+2			; total palette cycles (always 16.)
+	mov	#PalCycles, R5
+10$:	mov	R5, R0
+	add	#8., R5				; palette cycles table are 4-word entries
+	add	(R0)+, (R0)+			; add speed to the second word (initially it's zero)
+	bcc	101$				; not happens - skip that palette cycle
+	; (R0) - low, 2(R0) - high
+	mov	#PaletteBuf, R1
+	add	2(R0), R1
+	movb	(R1), R2			; save high palette entry
+	movb	256.(R1), R4			; because this palette is a crazy thing - need to save this byte also
+	mov	2(R0), R3
+	sub	(R0), R3			; count
+20$:	movb	-1(R1), (R1)			; shift palette 
+	movb	255.(R1), 256.(R1)
+	dec	R1
+	sob	R3, 20$
+	movb	R2, (R1)			; put previously saved high entry to low
+	movb	R4, 256.(R1)
+101$:	dec	#000000
+	bne	10$
+	; update palette
+	mov	#23, PaletteConfig		; 23 - modify palette
+	mov	#PaletteConfig, @#177530
+	nop	
+	return
+
+ReadFile:
+	mov	#Msg001, ErrMsg		; possible error: device error
+	.fetch	#Buf001, #Dkn001	; test device
+	bcc	10$
+	return
+10$:	mov	#Msg002, ErrMsg		; possible error: channel is active
+	.looku	#Area01, #7, #Dkn001	; test file, return R0-file size in blocks
+	bcc	20$
+	tstb	@#52			; check what error
+	beq	12$			; it's channel is active?
+	mov	#Msg003, ErrMsg		; file not found
+12$:	sec
+	return
+20$:	; reading prepare R0 now is file size in blocks
+	mov	ReadStartBlk, CurBlk	; block to read
+	mov	#63., TotBlk		; total blocks to read
+	mov	#Msg005, ErrMsg		; possible error: file read error
+40$:	; reading cycle
+	.readw	#Area01, #7, #Buf002, #256., CurBlk
+	bcs	90$			; C=1 is error
+	tst	R0			; R0=readed words count
+	beq	50$			; nothing readed? (eof?)
+	; readed, data in BUF002
+	; copy readed data to picture and palette buf
+	mov	#Buf002, R0
+	mov	ReadAddr, R1
+	mov	#256., R3
+	mov	(R0)+, (R1)+
+	sob	R3, .-2
+	; next please
+	inc	CurBlk
+	add	#512., ReadAddr
+	dec	TotBlk
+	bne	40$
+50$:	; eof I think
+	.close	#7
+	clc				; set no error
+	return
+90$:	; read error
+	tstb	@#52			; error word addr
+	beq	50$			; no error - it's what? eof again?
+	.close	#7
+	sec
+	return
+
+
+; ///////////////////////////////////////////////////
+; // Window 
+; ///////////////////////////////////////////////////
+
+WindowInit:
+	; try to create VM8 palette
+	mov	PaletteConfig+2, R0		; for checking later
+	mov	#PaletteConfig, @#177530	; create own palette
+	nop					; nop somehow is necessary (!)
+	cmp	R0, PaletteConfig+2		; allocated?
+	bne	10$
+	; no palette given - exiting
+	.print	#MsgNoPalette
+	.exit
+10$:	; palette allocated
+	mov	PaletteConfig+2, PaletteNumber
+
+	; 25 = PLSAVx save palette
+	; 23 = PLMODx modify palette
+	; trying to make 'active view' badges be black-colored (they are not needed in full-screen app)
+	mov	#25, SaveVm1Palette		; .. just in case
+	mov	#SaveVm1Palette, @#177530	; save vm1 #0 palette
+	nop
+	movb	SaveVm1Palette+4.+15., OldVm1N15Color+1	; high byte
+	movb	SaveVm1Palette+4.+31., OldVm1N15Color+0	; low byte
+	; modify it
+	clrb	SaveVm1Palette+4.+15.		; clear them to black color
+	clrb	SaveVm1Palette+4.+31.
+	mov	#23, SaveVm1Palette		; 23 - modify vm1 #0 palette
+	mov	#SaveVm1Palette, @#177530
+	nop	
+
+	; create area
+	mov	PaletteConfig+2, AreaConfig+10	; put created palette # to area config 
+	mov	#AreaConfig, @#177530		; create area
+	nop
+	; create view
+	mov	AreaConfig+2, ViewConfig+4	; put created area# to view config
+	mov	#ViewConfig, @#177530		; create view
+	nop
+	return
+
+WindowFree:
+	; free window and palette
+	mov	#2, AreaConfig			; command "free area"
+	mov	#AreaConfig, @#177530		; free area and its view
+	nop
+	mov	#21, PaletteConfig		; command "free palette"
+	mov	#PaletteConfig, @#177530	; free palette
+	nop
+	; restore previous vm1 #0 palette color value
+	movb	OldVm1N15Color+1, SaveVm1Palette+4.+15.
+	movb	OldVm1N15Color+0, SaveVm1Palette+4.+31.
+	mov	#23, SaveVm1Palette		; modify vm1 #0 palette
+	mov	#SaveVm1Palette, @#177530
+	nop
+	return
+
+OldVm1N15Color:	.word	0			; old #15 color to save it and restore after exit from program
+SaveVm1Palette:	.word	25			; 25 - save palette
+		.byte	0			; 1-bit for pixel
+		.byte	0			; palette #0
+		.blkw	16.			; 32 bytes of palette
+
+; screen buffer (so called "area") description
+AreaConfig:	.word	46			; 46 - command "create and register area"
+		.word	VBuffer			; address of screen buffer (returns area id here after #46 command)
+		.word	VYsize			; rows count
+		.word	VXsize			; bytes count in row
+		; palette word 
+		.byte	7			; 256 colors
+		.byte	0			; palette #
+
+; window (so called "view") description
+ViewConfig:	.word	4			; 4 - command "create view"
+		.word	0			; view id
+		.word	0			; area id
+		.word	0			; vertical content offset
+		.word	0			; horisontal content offset
+		; these four words will be anyway corrected by window manager program - so they are maxed here
+		.word	0.			; top position (row)
+		.word	299.			; bottom position (row)
+		.word	0.			; left position (column, 32-pix)
+		.word	25.			; right position (column)
+		.byte	2,1			; scale x,y (0 = *4, 1 = *2, 2 = *1)
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // DATA
+; //////////////////////////////////////////////////////////////////////////////
+
+ErrMsg:		.word	0
+Msg001:		.asciz	"ERROR: Device DK: not found"
+Msg002:		.asciz	"ERROR: Channel #7 is active"
+Msg003:		.asciz	"ERROR: Data file neode1.dat not found"
+Msg005:		.asciz	"ERROR: File read error"
+MsgNoPalette:	.asciz	"ERROR: No Vm8 palette available"
+		.even
+
+PaletteNumber:	.word	0
+CurPic:		.word	0
+PicStartTbl:	.word	0, 63., 63.*2
+
+; readfile data
+ReadStartBlk:	.word	0
+ReadAddr:	.word	0
+TotBlk:		.word	0
+CurBlk:		.word	0
+Area01:		.blkw	5
+Dkn001:		.rad50	"DK "
+		.rad50	"NEO"
+		.rad50	"DE1"
+		.rad50	"DAT"
+Buf001:		.blkw	200
+Buf002:		.blkw	256.	; 512-byte block, file data
+
+.=.+512.
+.=.&^B1111111000000000
+
+@include neode1_data.mac
+
+	.end	Start
