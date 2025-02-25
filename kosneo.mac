@@ -1,0 +1,305 @@
+	.enabl	LC, AMA
+	.list	MEB
+
+@include p16mac.mac
+
+	.asect
+	.=1000
+
+XSize		= 256.		; pixels
+YSize		= 256.		; pixels
+C_VADDR		= 40000
+C_SCRWID	= XSize/4
+
+Start:
+	mov	#PaletteConfig, @#177530	; create palette
+	nop					; believe it or not, NOP next to a system call is necessary
+	mov	PaletteId, AreaPalette
+	mov	#AreaConfig, @#177530		; create screen buffer (so called "area")
+	nop
+	mov	AreaConfig+2, @#AreaId		; put a screen buffer id to the window description
+	mov	#ViewConfig, @#177530		; create window (so called "view")
+	nop
+
+	call	VSyncInit
+
+	clr	@#177560			; keyboard?
+	jmp	Speed
+
+
+PaletteConfig:	.word	17			; command "create palette"
+PaletteId:	.byte	1			; 4 colors
+		.byte	0			; palette #
+		
+PaletteBuf:	; palette words G5 G4 G3 R4 R3 R2 B4 B3 - G2 G1 G0 R1 R0 B2 B1 B0
+		.byte	^B11100011, 0,0,0,0,0,0,0,0,0,0,0 ; 12. not used bytes (except #0 - border)
+		.byte	0, 3, 340, 34 		; upper bytes of palette words
+		.byte	^B11100111, 0,0,0,0,0,0,0,0,0,0,0 ; 12. not used bytes (except #0)
+		.byte	0, 7, 340, 30 		; lower bytes of palette words
+
+; screen buffer (so called "area") description
+AreaConfig:	.word	46			; command "create area"
+		.word	C_VADDR			; address of screen buffer or area id
+		.word	YSize			; rows count
+		.word	C_SCRWID		; bytes count in row
+AreaPalette:	.byte	1			; 4 colors
+		.byte	0			; palette 0
+
+; window (so called "view") description
+ViewConfig:	.word	4			; command "create view"
+ViewId:		.word	0			; view id
+AreaId:		.word	0			; area id
+		.word	0			; vertical content offset
+BXBY:		.word	0			; horisontal content offset
+		.word	20.			; top position (row)
+		.word	20.+256.		; bottom position (row)
+		.word	5			; left position (column)
+		.word	20.			; right position (column)
+		.byte	1,2			; scale x,y (0 = *4, 1 = *2, 2 = *1)
+
+
+; //////////////////////////////////////////////////////////////////////////////
+
+Lines:		.word	0
+Tick50:		.word	0
+Frames:		.word	0
+BkwScrn:	.word	0
+Bkw100:		.word	0
+
+
+VsyncInit:
+;	mfhlt	#V.Scrn
+;	mov	R0, BkwScrn
+;	mov	#7126, R0
+;	mthlt	#V.Scrn
+	mov	@#100, Bkw100
+	mov	#VsyncProc, @#100
+	return
+
+VSyncFree:
+	mov	Bkw100, @#100
+;	MOV	BkwScrn, R0
+;	mthlt	#V.Scrn
+	return
+
+; (!) save/restore registers, it's not a separate process
+VsyncProc:
+	inc	Tick50
+	cmp	Tick50, #500.
+	blo	99$
+	mov	R0, -(SP)
+	mov	R1, -(SP)
+	mov	R2, -(SP)
+	mov	R5, -(SP)
+	mov	Frames, R0
+	call	Digi3
+	call	Prist8
+	clr	Tick50
+	clr	Frames
+	mov	(SP)+, R5
+	mov	(SP)+, R2
+	mov	(SP)+, R1
+	mov	(SP)+, R0
+99$:	rti
+
+
+MsgFp8:	.asciz	"00:0"
+	.even
+
+; 4x5 numbers (aligned by 8 bytes)
+SprNumbers45:
+	.byte	^B00111111, ^B00110011, ^B00110011, ^B00110011, ^B00111111, 0, 0, 0
+	.byte	^B00001100, ^B00001100, ^B00001100, ^B00001100, ^B00001100, 0, 0, 0
+	.byte	^B00111111, ^B00110000, ^B00111111, ^B00000011, ^B00111111, 0, 0, 0
+	.byte	^B00111111, ^B00110000, ^B00111100, ^B00110000, ^B00111111, 0, 0, 0
+	.byte	^B00110011, ^B00110011, ^B00111111, ^B00110000, ^B00110000, 0, 0, 0
+	.byte	^B00111111, ^B00000011, ^B00111111, ^B00110000, ^B00111111, 0, 0, 0
+	.byte	^B00111111, ^B00000011, ^B00111111, ^B00110011, ^B00111111, 0, 0, 0
+	.byte	^B00111111, ^B00110000, ^B00110000, ^B00110000, ^B00110000, 0, 0, 0
+	.byte	^B00111111, ^B00110011, ^B00111111, ^B00110011, ^B00111111, 0, 0, 0
+	.byte	^B00111111, ^B00110011, ^B00111111, ^B00110000, ^B00111111, 0, 0, 0 
+	.byte	^B00000000, ^B00000000, ^B00000000, ^B00000000, ^B00001100, 0, 0, 0
+	.even 
+
+; print string
+PriSt8:	mov	#MsgFp8, R0
+	mov	#C_SCRWID+C_VADDR, R5
+	mov	#64., R2		; vaddr addition
+10$:	movb	(R0)+, R1		; get text byte
+	beq	99$			; zero - exit
+	sub	#'0, R1			; relative to '0'
+	asl	R1			; *8 bytes (character font size)
+	asl	R1
+	asl	R1
+	add	#SprNumbers45, R1	; R1 = font data
+	.rept	8.			; out character
+	movb	(R1)+, (R5)
+	add	R2, R5
+	.endr
+	sub	#8.*C_SCRWID-1, R5	; advance vaddr
+	br	10$
+99$:	return 
+
+; put 2.1 digits string to MsgFp8, R0 - number
+Digi3:	mov	#MsgFp8, R5
+	cmp	R0, #999.
+	blos	10$
+	mov	#999., R0
+10$:	mov	#100., R2
+	call	100$
+	mov	#10., R2
+	call	100$
+	inc	R5
+	add	#'0, R0
+	movb	R0, (R5)
+	return
+100$:	mov	#'0, R1
+110$:	cmp	R0, R2
+	blo	120$
+	sub	R2, R0
+	inc	R1
+	br	110$
+120$:	movb	R1, (R5)+
+	return
+
+; //////////////////////////////////////////////////////////////////////////////
+
+TablSize	= 64.
+Angle		= 16.			; Cos offset
+Variable	= Accums + 6
+
+; // Manwe's kosi4ka code ////////////////////////////////////////////////////////
+
+Speed:	br	Begin				; Y
+	.word	36543, 1321			; timer2, timer1
+Accums:
+
+Begin:
+	; Clone sine table
+	mov	#Tabl+32., R1			; pointer to sine table
+	mov	#32., R2
+10$:	movb	Tabl-1(R2), (R1)+
+	sob	R2, 10$
+
+;	; clear screen
+;20$:	clr	(R1)+
+;	tst	R1
+;	bpl	20$
+
+Loop:	mov	#64., Lines			; lines to render
+	mov	#Accums, R3
+	clr	(R3)+				; clear accums
+	clr	(R3)+
+	tst	(R3)+
+	mov	#100, R0			; mask
+
+Direct:	incb	(R3)				; default Y
+	bne	10$
+	xor	R0, Direct			; DEC opcode: 5313, INC opcode: 5213
+10$:	mov	(R3)+, (R3)			; set Y
+	mov	(R3)+, (R3)			; set timer2
+	mov	#2*C_SCRWID+2+C_VADDR, R0	; screen address
+
+; render twister to screen
+Render:
+	mov	#Speed, R4
+	mov	#3, R3
+10$:	add	(R4)+, 4(R4)			; add speed to accum
+	adc	14(R4)				; increment variable
+	sob	R3, 10$
+
+	mov	#Variable+6, R3			; pointer to variable array
+
+	mov	(R3), R4			; get timer 1
+	call	Sin
+	swab	R5
+	asl	R5
+	mov	R5, Speed			; Y speed
+
+	mov	-(R3), R4			; get timer 2
+	call	Sin
+	add	#32., R5
+	asr	R5
+	asr	R5
+	mov	R5, R2				; horisontal shift
+
+	mov	-(R3), R4			; get Y
+
+	mov	R0, -(SP)			; set maximum
+	mov	R0, -(SP)
+	add	#77, (SP)			; set minimum
+	mov	#4, R3
+30$:	call	Sin				; R5=Sin(R4)
+	mov	R5, R1
+	asr	R1				; left coordinate
+	add	#Angle, R4			; 90 degrees offset
+	call	Sin				; R5=Sin(R4)
+	asr	R5				; right coordinate
+	sub	R1, R5				; length
+	ble	70$
+	bic	#77, R0				; new screen line
+	add	R2, R0				; horisontal shift
+	add	R1, R0
+	cmp	R0, (SP)			; minimum
+	bgt	40$
+	mov	R0, (SP)			; set new minimum
+40$:	movb	Color-1(R3), R1			; read color
+50$:	movb	R1, (R0)+
+	sob	R5, 50$
+	cmp	R0, 2(SP)			; maximum
+	blos	60$
+	mov	R0, 2(SP)			; set new maximum
+60$:	bicb	#340, -(R0)			; draw border
+70$:	sob	R3, 30$
+	mov	(SP)+, R5			; get minimum
+	movb	R3, -(R5)			; erase left pixels
+	movb	R3, -(R5)
+	movb	R3, -(R5)
+	movb	R3, -(R5)
+	mov	(SP)+, R5			; get maxumum
+	movb	R3, (R5)+			; erase right pixels
+	movb	R3, (R5)+
+	mov	R3, (R5)
+
+	add	#4*C_SCRWID, R0			; next screen line
+	dec	Lines
+	bne	Render
+
+	tstb	@#177560			; anykey?
+	bmi	80$
+	
+	inc	Frames
+	br	Loop
+	
+80$:	tst	@#177562
+
+	; free window and palette
+	mov	#2, AreaConfig			; command "free area"
+	mov	#AreaConfig, @#177530		; free area and its view
+	nop
+	mov	#21, PaletteConfig		; command "free palette"
+	mov	#PaletteConfig, @#177530	; free palette
+	nop
+	
+	; restore vsync 
+	call	VSyncFree
+	
+	; exit program
+	; movb	#20, @#53			; set Unconditional error to abort com-file
+	; bis	#4000, @#44			; set Job Status Word to abort com-file
+	clr	R0				; close all files
+	emt	#350				; and exit to RT-11 system
+
+; Sinus
+; input: R4 - angle
+; outpu: R5 - sinus
+Sin:	mov	R4, R5
+	bic	#177700, R5
+	movb	Tabl(R5), R5
+	return
+
+Color:	.byte	231,167,252,273
+Tabl:	.byte	63.,62.,62.,61.,60.,58.,56.,54.,52.,50.,48.,45.,42.,39.,37.,33.
+	.byte	31.,28.,25.,22.,19.,17.,14.,12.,10.,8.,6.,4.,3.,2.,2.,1.
+
+	.end	Start

@@ -1,1 +1,1 @@
-start ..\..\neon\neonbtl /autostart /disk0:..\neontest\neon.dsk /boot1
+start ..\..\neon\neonbtl /autostart /disk0:..\neontest\release\neon.dsk /boot1

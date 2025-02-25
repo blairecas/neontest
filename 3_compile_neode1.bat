@@ -39,9 +39,9 @@ del neodat1.bin
 del neodat2.bin
 del neodat3.bin
 
-..\scripts\rt11dsk d neon.dsk .\release\neode1.sav >NUL
-..\scripts\rt11dsk a neon.dsk .\release\neode1.sav >NUL
-..\scripts\rt11dsk d neon.dsk .\release\neode1.dat >NUL
-..\scripts\rt11dsk a neon.dsk .\release\neode1.dat >NUL
+..\scripts\rt11dsk d .\release\neon.dsk .\release\neode1.sav >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\neode1.sav >NUL
+..\scripts\rt11dsk d .\release\neon.dsk .\release\neode1.dat >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\neode1.dat >NUL
 
 echo.

@@ -13,9 +13,9 @@ if %ERRORLEVEL% NEQ 0 ( exit /b )
 del _ppt3.mac
 del _ppt3.lst
 
-..\scripts\rt11dsk d neon.dsk .\release\ppt3.sav >NUL
-..\scripts\rt11dsk a neon.dsk .\release\ppt3.sav >NUL
+..\scripts\rt11dsk d .\release\neon.dsk .\release\ppt3.sav >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\ppt3.sav >NUL
 
-..\..\neon\neonbtl /autostart /disk0:..\neontest\neon.dsk /boot1
+..\..\neon\neonbtl /autostart /disk0:..\neontest\release\neon.dsk /boot1
 
 echo.

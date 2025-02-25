@@ -13,8 +13,8 @@ if %ERRORLEVEL% NEQ 0 ( exit /b )
 del _videm1.mac
 del _videm1.lst
 
-..\scripts\rt11dsk d neon.dsk .\release\videm1.sav >NUL
-..\scripts\rt11dsk a neon.dsk .\release\videm1.sav >NUL
+..\scripts\rt11dsk d .\release\neon.dsk .\release\videm1.sav >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\videm1.sav >NUL
 
 echo.
 echo ===========================================================================
@@ -30,9 +30,9 @@ if %ERRORLEVEL% NEQ 0 ( exit /b )
 del _videm2.mac
 del _videm2.lst
 
-..\scripts\rt11dsk d neon.dsk .\release\videm2.sav >NUL
-..\scripts\rt11dsk a neon.dsk .\release\videm2.sav >NUL
+..\scripts\rt11dsk d .\release\neon.dsk .\release\videm2.sav >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\videm2.sav >NUL
 
-..\..\neon\neonbtl /autostart /disk0:..\neontest\neon.dsk /boot1
+..\..\neon\neonbtl /autostart /disk0:..\neontest\release\neon.dsk /boot1
 
 echo.

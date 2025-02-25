@@ -13,7 +13,7 @@ if %ERRORLEVEL% NEQ 0 ( exit /b )
 del _neode2.mac
 del _neode2.lst
 
-..\scripts\rt11dsk d neon.dsk .\release\neode2.sav >NUL
-..\scripts\rt11dsk a neon.dsk .\release\neode2.sav >NUL
+..\scripts\rt11dsk d .\release\neon.dsk .\release\neode2.sav >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\neode2.sav >NUL
 
 echo.
