@@ -11,7 +11,13 @@ YSize		= 256.		; pixels
 C_VADDR		= 40000
 C_SCRWID	= XSize/4
 
-Start:
+Start:	; clear vdata
+	mov	#C_VADDR, R0
+	mov	#YSize*C_SCRWID/2, R1
+	clr	(R0)+
+	sob	R1, .-2
+
+	; set window
 	mov	#PaletteConfig, @#177530	; create palette
 	nop					; believe it or not, NOP next to a system call is necessary
 	mov	PaletteId, AreaPalette
