@@ -1,0 +1,208 @@
+	.title	IDEDBG
+	.mcall	.print .exit
+	.enabl	LC
+
+	.asect
+	.=1000
+	
+IDE_DATA	=: 161120
+IDE_ERR		=: 161122
+IDE_COUNT	=: 161124
+IDE_LBALOW	=: 161126
+IDE_LBAMED	=: 161130
+IDE_LBAHI	=: 161132
+IDE_HEAD	=: 161134
+IDE_STATUS	=: 161136
+
+	.macro	.write	X, ADDR
+	mov	X, R0
+	mov	ADDR, R1
+	call	WriteWord
+	.endm
+
+	.macro	.read	ADDR
+	mov	ADDR, R1
+	call	ReadWord
+	.endm
+	
+Start:
+	.print	#MsgInfo
+	.write	#340, #IDE_HEAD
+	call	WaitReady
+
+	; read block 0
+	.write	#340, #IDE_HEAD			; 110002 0xE0 set master, LBA28
+	.write	#1, #IDE_COUNT			; 110012 sectors count
+	.write	#0, #IDE_LBALOW			; 110010 LBA low
+	.write	#0, #IDE_LBAMED			; 110006 LBA med
+	.write	#0, #IDE_LBAHI			; 110004 LBA high
+	.write	#40, #IDE_STATUS		; 110000 0x20 read sectors
+	call	WaitDrq
+	.print	#MsgCrLf
+
+	.print	#MsgReadSect
+	; reading first 50. words of block
+	mov	#5., R5
+20$:	mov	#10., R4
+30$:	mov	@#IDE_DATA, R0
+	call	PrintOctal
+	.print	#MsgSpace
+	sob	R4, 30$
+	.print	#MsgCrLf
+	sob	R5, 20$
+	; reading rest of block
+	mov	#400-50., R5
+40$:	tst	@#IDE_DATA
+	sob	R5, 40$
+
+Exit:	emt	350	
+	halt
+
+
+; wait for BSY=0, RDY=1
+WaitReady:
+	mov	#3, R5
+40$:	.read	#IDE_STATUS
+	bic	#^B1111111100111111, R0	
+	cmp	#^B0000000001000000, R0		; need BSY=0, RDY=1
+	beq	50$
+	clr	R0
+	sob	R0, .
+	sob	R5, 40$
+	.print	#MsgNoRdy
+	tst	(SP)+
+	jmp	Exit
+50$:	return
+
+
+; wait for DRQ=1, ERR=0
+WaitDrq:
+	mov	#3, R5
+40$:	.read	#IDE_STATUS
+	bic	#^B1111111111110110, R0	
+	cmp	#^B0000000000001000, R0		; need DRQ=1, ERR=0
+	beq	50$
+	clr	R0
+	sob	R0, .
+	sob	R5, 40$
+	.print	#MsgNoDrq
+	tst	(SP)+
+	jmp	Exit
+50$:	return
+
+
+; write R0 to (R1) with debug on screen
+WriteWord:
+	mov	R0, -(SP)
+	mov	R1, R0
+	call	PrintOctal
+	.print	#MsgArrow1
+	mov	(SP), R0
+	call	PrintOctal
+	mov	(SP)+, R0
+	mov	R0, (R1)
+	; read from there then
+	.print	#MsgRead
+	mov	(R1), R0
+	call	PrintOctal
+	.print	#MsgCrLf
+	return
+	
+
+; read (R1) -> R0 with debug info
+ReadWord:
+	mov	R1, R0
+	call	PrintOctal
+	.print	#MsgArrow2
+	mov	(R1), R0
+	mov	R0, -(SP)
+	call	PrintOctal
+	.print	#MsgSpace
+	mov	(SP), R0
+	call	PrintBinary
+	.print	#MsgCrLf
+	mov	(SP)+, R0
+	return
+
+
+; push all registers
+PushRegs:
+	mov	R0, TmpR0
+	mov	R1, TmpR1
+	mov	R2, TmpR2
+	mov	R3, TmpR3
+	mov	R4, TmpR4
+	mov	R5, TmpR5
+	return
+
+
+; pop all registers
+PopRegs:
+	mov	TmpR5, R5
+	mov	TmpR4, R4
+	mov	TmpR3, R3
+	mov	TmpR2, R2
+	mov	TmpR1, R1
+	mov	TmpR0, R0
+	return
+
+
+; R0 - number
+PrintOctal:
+	call	PushRegs
+	mov	#6, R3
+	clr	R1
+	mov	#MsgNum6, R2
+	br	22$
+20$:	clr	R1
+	asl	R0
+	rol	R1
+	asl	R0
+	rol	R1
+22$:	asl	R0
+	rol	R1	
+	add	#'0, R1
+	movb	R1, (R2)+
+	sob	R3, 20$
+	.print	#MsgNum6
+	jmp	PopRegs
+
+
+; R0 - number
+PrintBinary:
+	call	PushRegs
+	mov	#16., R3
+	mov	#MsgNum16, R2
+20$:	movb	#'0, (R2)
+	rol	R0
+	bcc	30$
+	movb	#'1, (R2)
+30$:	inc	R2
+	sob	R3, 20$
+	.print	#MsgNum16
+	jmp	PopRegs
+
+
+MsgNum16:	.ascii	"          "
+MsgNum6:	.ascii	"      "<200>
+MsgCrLf:	.ascii	<12><15><200>
+MsgArrow1:	.ascii	" <- "<200>
+MsgArrow2:	.ascii	" -> "<200>
+MsgSpaces:	.ascii	" "
+MsgSpace:	.ascii	" "<200>
+MsgBusy:	.ascii	"(!) Can't get BSY=0, DRQ=0"<12><15><200>
+MsgNoRdy:	.ascii	"(!) Can't get BSY=0, RDY=1"<12><15><200>
+MsgNoDrq:	.ascii	"(!) Can't get DRQ=1, ERR=0"<12><15><200>
+MsgInfo:	.ascii	"                         BRF Q  E"<12><15><200>
+MsgReadSect:	.ascii	"Reading first words of block 0"<12><15><200>
+MsgRead:	.ascii	" R: "<200>
+		.even
+
+TmpR0:		.word	0
+TmpR1:		.word	0
+TmpR2:		.word	0
+TmpR3:		.word	0
+TmpR4:		.word	0
+TmpR5:		.word	0
+
+	.end	Start

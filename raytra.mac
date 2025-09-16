@@ -1,0 +1,293 @@
+	.title	RAYTRA
+	.enabl	LC
+	.list	MEB
+
+@include p16mac.mac
+
+C_VADDR		=: 60000
+C_SCR_DX	=: 208.
+C_SCR_DY	=: 150.
+
+	.asect
+	.=1000
+
+Start:	clr	@#177560
+	call	KeyboardInit
+	call	WindowInit
+	call	VSyncInit
+
+	mov	#C_VADDR, R0
+	mov	#C_SCR_DX*C_SCR_DY, R3
+	clr	R1
+10$:	movb	R1, (R0)+
+	incb	R1
+	sob	R3, 10$
+
+	clr	KeyCurrent
+	tst	KeyCurrent
+	beq	.-4
+
+Exit:	call	VSyncFree
+	call	WindowFree
+	call	KeyboardFree
+	emt	350
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Graphics
+; //////////////////////////////////////////////////////////////////////////////
+
+BkwScrn:	.word	0
+Bkw100:		.word	0
+
+VsyncInit:
+	mov	@#100, Bkw100
+	mov	#VsyInt, @#100
+	return
+
+VSyncFree:
+	mov	Bkw100, @#100
+	return
+
+; (!) save/restore registers, it's not a separate process
+VsyInt:	inc	(PC)+
+VsyCnt:	.word	0
+	rti
+
+
+WindowInit:
+	mov	#PaletteConfig, @#177530	; create palette
+	nop					; believe it or not, NOP next to a system call is necessary
+	mov	PaletteId, AreaPalette
+	mov	#AreaConfig, @#177530		; create screen buffer (so called "area")
+	nop
+	mov	AreaConfig+2, @#AreaId		; put a screen buffer id to the window description
+	mov	#ViewConfig, @#177530		; create window (so called "view")	
+	nop
+	return
+
+
+WindowFree:
+	; free window and palette
+	mov	#2, AreaConfig			; command "free area"
+	mov	#AreaConfig, @#177530		; free area and its view(s)
+	nop
+	return
+
+
+; palette configuration
+PaletteConfig:	.word	17			; command "create palette"
+PaletteId:	.byte	7			; 256 colors
+		.byte	0			; palette #		
+PaletteBuf:	; palette words G5 G4 G3 R4 R3 R2 B4 B3  - G2 G1 G0 R1 R0 B2 B1 B0
+		; divided by 2 bytes, first part are 16 upper bytes, then 16 lower bytes
+		.byte	00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   01, 01, 01, 01, 01, 01, 01, 01
+		.byte   02, 02, 02, 02, 02, 02, 02, 02
+		.byte   03, 03, 03, 03, 03, 03, 03, 03
+		.byte   00, 00, 00, 00, 04, 04, 04, 04
+		.byte   10, 10, 10, 10, 14, 14, 14, 14
+		.byte   20, 20, 20, 20, 24, 24, 24, 24
+		.byte   30, 30, 30, 30, 34, 34, 34, 34
+		.byte   00, 00, 00, 00, 04, 04, 04, 04
+		.byte   11, 11, 11, 11, 15, 15, 15, 15
+		.byte   22, 22, 22, 22, 26, 26, 26, 26
+		.byte   33, 33, 33, 33, 37, 37, 37, 37
+		.byte   00, 00, 00, 00, 40, 40, 40, 40
+		.byte   100, 100, 100, 100, 140, 140, 140, 140
+		.byte   200, 200, 200, 200, 240, 240, 240, 240
+		.byte   300, 300, 300, 300, 340, 340, 340, 340
+		.byte   00, 00, 00, 00, 40, 40, 40, 40
+		.byte   101, 101, 101, 101, 141, 141, 141, 141
+		.byte   202, 202, 202, 202, 242, 242, 242, 242
+		.byte   303, 303, 303, 303, 343, 343, 343, 343
+		.byte   00, 00, 00, 00, 44, 44, 44, 44
+		.byte   110, 110, 110, 110, 154, 154, 154, 154
+		.byte   220, 220, 220, 220, 264, 264, 264, 264
+		.byte   330, 330, 330, 330, 374, 374, 374, 374
+		.byte   00, 00, 00, 00, 44, 44, 44, 44
+		.byte   111, 111, 111, 111, 155, 155, 155, 155
+		.byte   222, 222, 222, 222, 266, 266, 266, 266
+		.byte   333, 333, 333, 333, 377, 377, 377, 377
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 00, 00, 00, 00, 00, 00, 00
+		.byte   00, 01, 02, 03, 04, 05, 06, 07
+		.byte   00, 01, 02, 03, 04, 05, 06, 07
+		.byte   00, 01, 02, 03, 04, 05, 06, 07
+		.byte   00, 01, 02, 03, 04, 05, 06, 07
+		.byte   00, 10, 20, 30, 00, 10, 20, 30
+		.byte   00, 10, 20, 30, 00, 10, 20, 30
+		.byte   00, 10, 20, 30, 00, 10, 20, 30
+		.byte   00, 10, 20, 30, 00, 10, 20, 30
+		.byte   00, 11, 22, 33, 04, 15, 26, 37
+		.byte   00, 11, 22, 33, 04, 15, 26, 37
+		.byte   00, 11, 22, 33, 04, 15, 26, 37
+		.byte   00, 11, 22, 33, 04, 15, 26, 37
+		.byte   00, 100, 200, 300, 00, 100, 200, 300
+		.byte   00, 100, 200, 300, 00, 100, 200, 300
+		.byte   00, 100, 240, 340, 40, 140, 240, 340
+		.byte   40, 140, 240, 340, 40, 140, 240, 340
+		.byte   00, 101, 202, 303, 04, 105, 206, 307
+		.byte   00, 101, 202, 303, 04, 105, 206, 307
+		.byte   00, 101, 242, 343, 44, 145, 246, 347
+		.byte   40, 141, 242, 343, 44, 145, 246, 347
+		.byte   00, 110, 220, 330, 00, 110, 220, 330
+		.byte   00, 110, 220, 330, 00, 110, 220, 330
+		.byte   00, 110, 260, 370, 40, 150, 260, 370
+		.byte   40, 150, 260, 370, 40, 150, 260, 370
+		.byte   00, 111, 222, 333, 04, 115, 226, 337
+		.byte   00, 111, 222, 333, 04, 115, 226, 337
+		.byte   00, 111, 262, 373, 44, 155, 266, 377
+		.byte   40, 151, 262, 373, 44, 155, 266, 377
+
+; screen buffer (so called "area") description
+AreaConfig:	.word	46			; command "create area"
+		.word	C_VADDR			; address of screen buffer or area id
+		.word	C_SCR_DY		; rows count
+		.word	C_SCR_DX		; bytes count in row
+AreaPalette:	.byte	7			; 256 colors
+		.byte	0			; palette 0
+
+; window (so called "view") description
+ViewConfig:	.word	4			; command "create view"
+ViewId:		.word	0			; view id
+AreaId:		.word	1			; area id
+		.word	0			; vertical content offset
+		.word	0			; horisontal content offset
+		.word	0.			; top position (row)
+		.word	299.			; bottom position (row)
+		.word	0.			; left position (column)
+		.word	25.			; right position (column), auto-adjust
+		.byte	2,1			; scale x,y (0 = *4, 1 = *2, 2 = *1)
+
+
+; //////////////////////////////////////////////////////////////////////////////
+; // Keyboard
+; //////////////////////////////////////////////////////////////////////////////
+
+KbdSave:	.word	0, 0
+KbdPrio:	.word	0
+KbdProcDsc:	.word	0
+KbdProcNum:	.word	0
+KeysBuffer:	.blkw	8.
+
+KeyCurrent:	.word	0
+KeysBegin:
+KeyAp2:		.word	0, 00., ^B10000000
+Key0:		.word	0, 14., ^B00100000
+Key1:		.word	0, 02., ^B00000010
+Key2:		.word	0, 02., ^B00000100
+Key3:		.word	0, 02., ^B00000001
+KeyUp:		.word	0, 12., ^B00010000
+KeyDown:	.word	0, 10., ^B00010000
+KeyLeft:	.word	0, 08., ^B00100000
+KeyRight:	.word	0, 10., ^B00001000
+KeySpace:	.word	0, 08., ^B00001000
+KeyShift:	.word	0, 08., ^B01000000
+KeyTab:		.word	0, 02., ^B10000000
+KeyEnter:	.word	0, 12., ^B00001000
+KeysEnd:
+
+
+KeyboardInit:
+	; save some keyboard-related values? and set priority?
+	mfhlt	#V.Kbd
+	mov	R0, KbdSave
+	mfhlt	#V.Kbd+2
+	mov	R0, KbdSave+2
+	mov	KbdSave, R1
+	add	#P.Pri, R1
+	mfhlt	R1
+	mov	R0, KbdPrio
+	mov	KbdSave, R0
+	himpri	#-1
+	; new keyboard process
+       	newromp	#KeyboardProc
+	mov	R0, KbdProcDsc
+	mov	R0, R5
+	call	GetProcessNum
+	mov	R1, KbdProcNum 
+	return
+
+
+KeyboardFree:
+	; stop keyboard process
+	mtps	#200
+	clr	R0
+	mthlt	#157700
+	kilproc	KbdProcNum
+	mov	KbdSave+2, R0
+	mthlt	#V.Kbd+2
+	mov	KbdSave, R0
+	mthlt	#V.Kbd
+	bic	#M.Kbd, @#PicMr
+	mov	KbdSave, R0
+	himpri	KbdPrio
+	mtps	#0
+	return
+
+
+ClearKeys:
+	mov	#KeysBegin, R0
+10$:	clr	(R0)+
+	cmp	(R0)+, (R0)+
+	cmp	R0, #KeysEnd
+	blo	10$
+	return
+
+
+KeyboardProc:
+	setpri	#50000				; set priority of process
+	unpvec	#v.kbd				; unprotect keyboard vector
+	clr	R0
+	provec	#v.kbd				; protect keyboard vector
+10$:	waitint	#m.kbd				; wait keyboard inverrupt
+	mov	#120, @#KbdCsr			; ???
+	mov	#KeysBuffer, R4
+	mov	#8., R5
+20$:	mov	@#KbdBuf, (R4)+
+	sob	R5, 20$
+	mov	#302, @#KbdCsr
+	; check matrix
+	clr	KeyCurrent
+	mov	#KeysBegin, R5
+30$:	mov	2(R5), R0
+	add	#KeysBuffer, R0
+	bit	4(R5), (R0)
+	beq	40$
+	inc	(R5)
+	inc	KeyCurrent
+	br	50$
+40$:	clr	(R5)
+50$:	add	#6., R5
+	cmp	R5, #KeysEnd
+	blo	30$
+	; again ...
+	br	10$
+
+
+; R5 - process dsc
+; return: R1 - num
+GetProcessNum:
+	mov	#PdPtr, R2
+	clr	R1
+10$:	mfhlt	R2
+	inc	R1
+	mov	R0, R2
+	beq	20$
+	add	#P.DSucc, R2
+	cmp	R0, R5
+	bne	10$
+	br	30$
+20$:	clr	R1
+30$:	return 
+
+
+
+	.end	Start

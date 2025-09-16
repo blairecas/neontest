@@ -187,11 +187,6 @@ Begin:
 10$:	movb	Tabl-1(R2), (R1)+
 	sob	R2, 10$
 
-;	; clear screen
-;20$:	clr	(R1)+
-;	tst	R1
-;	bpl	20$
-
 Loop:	mov	#64., Lines			; lines to render
 	mov	#Accums, R3
 	clr	(R3)+				; clear accums
@@ -291,8 +286,6 @@ Render:
 	call	VSyncFree
 	
 	; exit program
-	; movb	#20, @#53			; set Unconditional error to abort com-file
-	; bis	#4000, @#44			; set Job Status Word to abort com-file
 	clr	R0				; close all files
 	emt	#350				; and exit to RT-11 system
 
