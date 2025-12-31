@@ -1,0 +1,30 @@
+	.title	TIMOFF
+	.mcall	.print .exit
+	.enabl	LC
+	.list	MEB
+
+@include p16mac.mac
+
+	.asect
+	.=1000
+
+Start:	timeoff
+	; SND (first VI)
+	mov	#^B00110110, @#sndcsr		; counter 0, mode 3, both bytes
+	mov	#^B01110110, @#sndcsr
+	mov	#^B10110110, @#sndcsr
+	; SNL     [CCHLMMMD] (second VI)
+	mov	#^B00010100, @#snlcsr		; counter 0, mode 2, lsb
+	mov	#^B01010100, @#snlcsr
+	mov	#^B10010100, @#snlcsr
+	clr	@#snlc0r			; silence channels
+	clr	@#snlc1r
+	clr	@#snlc2r
+	; print
+	.print	#Msg
+	.exit
+
+Msg:	.asciz	"timeoff macro was executed"
+	.even
+	
+	.end	Start

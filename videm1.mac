@@ -26,7 +26,6 @@ Exit:	; exiting
 	call	VSyncFree
 	call	KeyboardFree
 	call	WindowFree
-;	clr	@#picmr
 	timeon
 	clr	R0
 	.exit
@@ -330,7 +329,6 @@ Main:	; init
 	mov	#C_VADDR, R1
 	call	Unpack
 	call	PrepareRoll
-;	mov	#^B11001111, @#picmr		; mask ints exc keyboard, rtc
 
 ; play patterns
 PlayPatterns:
@@ -437,13 +435,16 @@ SetNot:	; data is for 1MHz VI53, so adjust it
 
 
 ; init VI53 counters
-; in Neon outputs of SNL go to gates of SND
+; in Neon outputs of SND go to gates of SNL
 IniVis:	; SNL     [CCHLMMMD]
-	mov	#^B00110110, @#snlcsr
+	mov	#^B00110110, @#snlcsr		; set mode 2
 	mov	#^B01110110, @#snlcsr
 	mov	#^B10110110, @#snlcsr
+	clr	@#snlc0r			; silence channels
+	clr	@#snlc1r
+	clr	@#snlc2r
 	; SND
-	mov	#^B00110010, @#sndcsr
+	mov	#^B00110010, @#sndcsr		; set mode 1
 	mov	#^B01110010, @#sndcsr
 	mov	#^B10110010, @#sndcsr
 	return

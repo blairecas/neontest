@@ -1,5 +1,5 @@
 	.title	IDEDBG
-	.mcall	.print .exit
+	.mcall	.print .exit .ttyin
 	.enabl	LC
 
 	.asect
@@ -25,22 +25,39 @@ IDE_STATUS	=: 161136
 	call	ReadWord
 	.endm
 	
-Start:
-	.print	#MsgInfo
-	.write	#340, #IDE_HEAD
+Start:	.write	#340, #IDE_HEAD
 	call	WaitReady
-
+	
 	; read block 0
+	clr	LbaLow
+	call	ReadBlock
+
+	.print	#MsgReadBlk2
+	.ttyin
+
+	; use 'flush cache' command
+	call	WaitReady
+	.write	#^xE7, #IDE_STATUS
+
+	; read block 2
+	mov	#2, LbaLow
+	call	ReadBlock
+
+Exit:	emt	350	
+	halt
+
+
+ReadBlock:
+	.print	#MsgInfo
+	call	WaitReady
 	.write	#340, #IDE_HEAD			; 110002 0xE0 set master, LBA28
 	.write	#1, #IDE_COUNT			; 110012 sectors count
-	.write	#0, #IDE_LBALOW			; 110010 LBA low
+	.write	LbaLow, #IDE_LBALOW		; 110010 LBA low
 	.write	#0, #IDE_LBAMED			; 110006 LBA med
 	.write	#0, #IDE_LBAHI			; 110004 LBA high
 	.write	#40, #IDE_STATUS		; 110000 0x20 read sectors
 	call	WaitDrq
 	.print	#MsgCrLf
-
-	.print	#MsgReadSect
 	; reading first 50. words of block
 	mov	#5., R5
 20$:	mov	#10., R4
@@ -54,17 +71,15 @@ Start:
 	mov	#400-50., R5
 40$:	tst	@#IDE_DATA
 	sob	R5, 40$
-
-Exit:	emt	350	
-	halt
+	return
 
 
-; wait for BSY=0, RDY=1
+; wait for BSY=0
 WaitReady:
-	mov	#3, R5
+	mov	#5, R5
 40$:	.read	#IDE_STATUS
-	bic	#^B1111111100111111, R0	
-	cmp	#^B0000000001000000, R0		; need BSY=0, RDY=1
+	bic	#^B1111111101111111, R0	
+	cmp	#^B0000000000000000, R0		; need BSY=0
 	beq	50$
 	clr	R0
 	sob	R0, .
@@ -77,7 +92,7 @@ WaitReady:
 
 ; wait for DRQ=1, ERR=0
 WaitDrq:
-	mov	#3, R5
+	mov	#5, R5
 40$:	.read	#IDE_STATUS
 	bic	#^B1111111111110110, R0	
 	cmp	#^B0000000000001000, R0		; need DRQ=1, ERR=0
@@ -193,9 +208,10 @@ MsgSpace:	.ascii	" "<200>
 MsgBusy:	.ascii	"(!) Can't get BSY=0, DRQ=0"<12><15><200>
 MsgNoRdy:	.ascii	"(!) Can't get BSY=0, RDY=1"<12><15><200>
 MsgNoDrq:	.ascii	"(!) Can't get DRQ=1, ERR=0"<12><15><200>
-MsgInfo:	.ascii	"                         BRF Q  E"<12><15><200>
+MsgInfo:	.ascii	<12><15>"                         BRF Q  E"<12><15><200>
 MsgReadSect:	.ascii	"Reading first words of block 0"<12><15><200>
 MsgRead:	.ascii	" R: "<200>
+MsgReadBlk2:	.ascii	<12><15>"Press ENTER to read block #2 ..."<200>
 		.even
 
 TmpR0:		.word	0
@@ -204,5 +220,7 @@ TmpR2:		.word	0
 TmpR3:		.word	0
 TmpR4:		.word	0
 TmpR5:		.word	0
+
+LbaLow:		.word	0
 
 	.end	Start

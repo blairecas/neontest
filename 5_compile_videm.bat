@@ -28,10 +28,28 @@ php -f ../scripts/lst2bin.php _videm2.lst ./release/videm2.sav sav
 if %ERRORLEVEL% NEQ 0 ( exit /b )
 
 del _videm2.mac
-rem del _videm2.lst
+rem _videm2.lst
 
 ..\scripts\rt11dsk d .\release\neon.dsk .\release\videm2.sav >NUL
 ..\scripts\rt11dsk a .\release\neon.dsk .\release\videm2.sav >NUL
+
+echo.
+echo ===========================================================================
+echo Compiling TIMOFF
+echo ===========================================================================
+php -f ../scripts/preprocess.php timoff.mac
+if %ERRORLEVEL% NEQ 0 ( exit /b )
+..\scripts\macro11 -ysl 32 -yus -m ..\scripts\sysmac.sml -l _timoff.lst _timoff.mac
+if %ERRORLEVEL% NEQ 0 ( exit /b )
+php -f ../scripts/lst2bin.php _timoff.lst ./release/timoff.sav sav
+if %ERRORLEVEL% NEQ 0 ( exit /b )
+
+del _timoff.mac
+del _timoff.lst
+
+..\scripts\rt11dsk d .\release\neon.dsk .\release\timoff.sav >NUL
+..\scripts\rt11dsk a .\release\neon.dsk .\release\timoff.sav >NUL
+
 
 ..\..\neon\neonbtl /autostart /disk0:..\neontest\release\neon.dsk /boot1
 
