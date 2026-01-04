@@ -440,9 +440,6 @@ IniVis:	; SNL     [CCHLMMMD]
 	mov	#^B00110110, @#snlcsr		; set mode 2
 	mov	#^B01110110, @#snlcsr
 	mov	#^B10110110, @#snlcsr
-	clr	@#snlc0r			; silence channels
-	clr	@#snlc1r
-	clr	@#snlc2r
 	; SND
 	mov	#^B00110010, @#sndcsr		; set mode 1
 	mov	#^B01110010, @#sndcsr
